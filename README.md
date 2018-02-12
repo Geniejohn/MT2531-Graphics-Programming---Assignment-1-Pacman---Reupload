@@ -1,5 +1,5 @@
-# Assignment Repository Skeleton
+# IMT2531 Graphics Programming - Assignment 1 Packman 
+### Jone Skaara (473181)
+### Johannes Gabriel Aas (473183)
 
-Please modify the Readme file to your project specifics, including project name, involved group members (including mail contacts), as well as a version history.
 
-In addition, use this file to describe the project functionality, provide setup instructions, and a brief overview on how to use it.
