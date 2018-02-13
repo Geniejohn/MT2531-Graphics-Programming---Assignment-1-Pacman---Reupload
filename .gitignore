@@ -1,4 +1,8 @@
+
 *.cmake
+#Visual Code files:
+.vscode/
+
 bin/
 cmake_install.cmake
 compile_commands.json
@@ -10,4 +14,10 @@ Makefile
 install_manifest.txt
 CTestTestfile.cmake
 Testing
+
+#For OSX:
 SOIL/SOIL.framework/
+#For ubuntu:
+SOIL/libSOIL.so.1
+SOIL/libSOIL.so.1.07
+

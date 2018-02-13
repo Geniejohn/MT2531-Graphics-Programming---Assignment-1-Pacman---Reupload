@@ -1,19 +1,28 @@
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm/glm.hpp"
 #include "logger.h"
+#include "gameloop.hpp"
+#include <iostream>
 
-Gameloop gameloop;
+GameLoop gameLoop;
 
-int main()
+int main(void)
 {
+	//Static code.
+
+    if (gameLoop.startup() != 0)
+    {
+		LOG_DEBUG("Failed to run gameLoop startup.");
+        return -1;
+    }
+
+
 
     do
     {
-        
-        gameloop.run();
 
-    }while(running);
+        gameLoop.run();
+
+    }while(gameLoop.getRunning());
+
 
     return (0);
 }
