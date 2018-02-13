@@ -1,11 +1,12 @@
 *.cmake
+bin/
+cmake_install.cmake
+compile_commands.json
 CMakeCache.txt
 CMakeFiles
 CMakeScripts
-Testing
+Doxyfile
 Makefile
-cmake_install.cmake
 install_manifest.txt
-compile_commands.json
 CTestTestfile.cmake
-bin/
+Testing
