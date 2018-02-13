@@ -10,3 +10,4 @@ Makefile
 install_manifest.txt
 CTestTestfile.cmake
 Testing
+SOIL/SOIL.framework/
