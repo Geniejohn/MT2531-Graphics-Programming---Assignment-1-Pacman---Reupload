@@ -13,6 +13,8 @@
 #include "glm/glm/glm.hpp"
 #include "glm/glm/gtc/matrix_transform.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
+
+#include "sprite.hpp"
 #include "constants.h"
 
 
@@ -25,6 +27,8 @@ class GameLoop
 
 	  GLFWwindow* window;
 
+	  Sprite* sprite;		//test sprite.
+
     public:
         GameLoop()
 		{
@@ -32,16 +36,30 @@ class GameLoop
 		    nbFrames = 0;
 		    lastTime = glfwGetTime();
 
+
+		}
+
+		~GameLoop()
+		{
+			delete sprite;
+
+			glfwDestroyWindow(window);
+			glfwTerminate();
 		}
 
 
 		// Initialise GLFW window. Returns -1 if failed.
 		int startup()
 		{
+			sprite = new Sprite(
+				glm::vec2(0,0),						//Position.
+				glm::vec2(0,0),						//Size.
+				glm::vec4(0,0,0,0),					//UV
+				empty);
 
 			if (!glfwInit())
 			{
-				LOG_DEBUG(stderr, "Failed to initialize GLFW\n");
+				LOG_DEBUG("Failed to initialize GLFW\n");
 				getchar();
 				return -1;
 			}
@@ -57,7 +75,7 @@ class GameLoop
 			window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Pacman", NULL, NULL);
 			glfwMakeContextCurrent(window);
 			if (window == NULL) {
-				LOG_DEBUG(stderr, "Failed to open GLFW window.\n");
+				LOG_DEBUG("Failed to open GLFW window.\n");
 				getchar();
 				glfwTerminate();
 				return -1;
@@ -67,7 +85,7 @@ class GameLoop
 			glewExperimental = GL_TRUE;
 			// Initialize GLEW
 			if (glewInit() != GLEW_OK) {
-				LOG_DEBUG(stderr, "Failed to initialize GLEW\n");
+				LOG_DEBUG("Failed to initialize GLEW\n");
 				getchar();
 				glfwTerminate();
 				return -1;
@@ -83,6 +101,10 @@ class GameLoop
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			glClearColor(1,1,1,1);
+
+
+
+
 
 			return 0;															//All went well.
 		}
@@ -102,6 +124,7 @@ class GameLoop
 		    }
 
 			//dynamic code//
+			//sprite-> draw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
@@ -126,10 +149,4 @@ class GameLoop
 		    running = false;
 		}
 
-
-        ~GameLoop()
-		{
-			glfwDestroyWindow(window);
-			glfwTerminate();
-		}
 };
