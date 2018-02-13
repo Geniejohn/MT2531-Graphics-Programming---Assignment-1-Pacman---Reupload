@@ -1,19 +1,26 @@
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm/glm.hpp"
 #include "logger.h"
+#include "gameloop.h"
+
 
 Gameloop gameloop;
 
-int main()
+int main(void)
 {
+
+	//Static code.
+
+    if (startup() != 1)
+    {
+		// LOGGER_DEBUG
+        return -1;
+    }
+
 
     do
     {
-        
         gameloop.run();
 
-    }while(running);
+    }while(getRunning());
 
     return (0);
 }
