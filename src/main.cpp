@@ -6,26 +6,23 @@ GameLoop gameLoop;
 
 int main(void)
 {
-	std::cout << "\nMain started.";
 	//Static code.
 
     if (gameLoop.startup() != 0)
     {
-		// LOGGER_DEBUG
+		LOG_DEBUG("Failed to run gameLoop startup.");
         return -1;
     }
-	std::cout << "\nMain startup done.";
+
 
 
     do
     {
-		std::cout << "\nGameLoop";
 
         gameLoop.run();
 
     }while(gameLoop.getRunning());
 
 
-	std::cout << "\nMain exiting(0)\n";
     return (0);
 }
