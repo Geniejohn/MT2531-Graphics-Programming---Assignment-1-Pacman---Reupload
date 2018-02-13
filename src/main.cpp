@@ -1,26 +1,31 @@
 #include "logger.h"
-#include "gameloop.h"
+#include "gameloop.hpp"
+#include <iostream>
 
-
-Gameloop gameloop;
+GameLoop gameLoop;
 
 int main(void)
 {
-
+	std::cout << "\nMain started.";
 	//Static code.
 
-    if (startup() != 1)
+    if (gameLoop.startup() != 0)
     {
 		// LOGGER_DEBUG
         return -1;
     }
+	std::cout << "\nMain startup done.";
 
 
     do
     {
-        gameloop.run();
+		std::cout << "\nGameLoop";
 
-    }while(getRunning());
+        gameLoop.run();
 
+    }while(gameLoop.getRunning());
+
+
+	std::cout << "\nMain exiting(0)\n";
     return (0);
 }

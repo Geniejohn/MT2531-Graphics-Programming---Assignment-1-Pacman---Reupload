@@ -45,6 +45,8 @@
 #include <cstring>
 #include <vector>
 
+#define nullptr NULL
+
 #ifdef _WIN32
 #include <Windows.h>
 #endif
