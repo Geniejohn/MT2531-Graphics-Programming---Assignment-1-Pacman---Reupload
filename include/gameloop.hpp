@@ -87,7 +87,6 @@ class GameLoop
 			}
 
 
-
 			glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 			glfwSwapInterval(1);
 
@@ -99,9 +98,9 @@ class GameLoop
 
 
 			sprite = new Sprite(
-				glm::vec2(0,0),						//Position.
-				glm::vec2(0,0),						//Size.
-				glm::vec4(0,0,0,0),					//UV
+				glm::vec2(0,	0),												//Position.
+				glm::vec2(0.5f,	0.5f),											//Size.
+				glm::vec2(1,	1),												//Sprite sheetPosition.
 				empty);
 
 

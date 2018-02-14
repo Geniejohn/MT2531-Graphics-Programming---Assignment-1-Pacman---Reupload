@@ -2,7 +2,6 @@
 #include "glm/glm/glm.hpp"
 #include "logger.h"
 #include "gameloop.hpp"
-#include "sprite.hpp"
 #include "constants.h"
 
 GameLoop gameLoop;
@@ -19,7 +18,6 @@ int main(void)
 
     do
     {
-
         gameLoop.run();
 
     }while(gameLoop.getRunning());

@@ -21,3 +21,10 @@ SOIL/SOIL.framework/
 SOIL/libSOIL.so.1
 SOIL/libSOIL.so.1.07
 
+
+#Cmake started modifying these src files on Ubuntu vs OSX
+#Ignored them to prevent updating them between the two different states.
+glfw/docs/Doxyfile
+glfw/src/glfw3.pc
+glfw/src/glfw_config.h
+glfw/src/libglfw3.a

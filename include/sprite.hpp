@@ -29,8 +29,11 @@ class Sprite
 		GLuint vao;																//Vertex array with the 4 verticies.
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-		GLuint* shaderProgram;											//ShaderProgram loaded once, shared between all sprites.
-		GLuint* textures[TEXTURE_COUNT];									//Holds the textures for all possible sprites in the game.
+		GLuint* shaderProgram;													//ShaderProgram loaded once, shared between all sprites.
+		GLuint* textures[TEXTURE_COUNT];										//Holds the textures for all possible sprites in the game.
+		glm::vec2 pos;															//Holds world position.
+		glm::vec2 size;															//Holds in-world size of the sprite.
+		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
 
         //
 		// char* loadTextureFromFile(char* path, int no)
@@ -79,44 +82,9 @@ class Sprite
 			return (p);
 		}
 
-	public:
-		Sprite(glm::vec2 worldPos, glm::vec2 size, glm::vec4 uv, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
+		//Setting up attributes for shaderProgram:
+		void loadSharderAttributes()
 		{
-			LOG_DEBUG("sprite constructor started.");
-																		//UV is vec4(startU, startV, endU, endV).
-			glBindVertexArray(vao);
-
-			LOG_DEBUG("VAO 1.");
-
-			glGenVertexArrays(1, &vao);
-
-			LOG_DEBUG("VAO 2.");
-
-			glBindVertexArray(vao);
-
-			LOG_DEBUG("VAO 3.");
-
-
-			glGenBuffers(1, &vbo);
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
-
-			LOG_DEBUG("VBO created.");
-
-			glGenBuffers(1, &ebo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
-
-			LOG_DEBUG("EBO created.");
-
-
-			if(firstSprite)														//If first sprite to be made:
-			{
-				LOG_DEBUG("Creating shaderProgram.");
-				shaderProgram = new GLuint;
-				*shaderProgram = create_program("vertex.vert", "fragment.frag");
-			}
-
 			GLint posAttrib = glGetAttribLocation(*shaderProgram, "position");
 			glEnableVertexAttribArray(posAttrib);
 			glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
@@ -128,44 +96,78 @@ class Sprite
 			GLint texAttrib = glGetAttribLocation(*shaderProgram, "texcoord");
 			glEnableVertexAttribArray(texAttrib);
 			glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+		}
+
+	public:
+		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, glm::vec2 sheetPos, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
+		{
+			LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
+
+			pos = worldPos;
+			size = spriteSize;
+
+																		//UV is vec4(startU, startV, endU, endV).
+			glBindVertexArray(vao);
+			glGenVertexArrays(1, &vao);
+			glBindVertexArray(vao);
+			glGenBuffers(1, &vbo);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
+
+			glGenBuffers(1, &ebo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
 
 			if(firstSprite)														//If first sprite to be made:
 			{
-				//for (int i = 0; i < TEXTURE_COUNT; i++)
-				//{
-					textures[0] = new GLuint;
-			//	}
-				glGenTextures(1, *textures);
+				LOG_DEBUG("Creating shaderProgram.");
+				shaderProgram = new GLuint;
+				*shaderProgram = create_program("vertex.vert", "fragment.frag");
 
-				int width, height;
-				unsigned char* image;
-				float x, y, widthT, heightT;
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, *textures[0]);
-				image = SOIL_load_image("./assets/test.png", &width, &height, 0, SOIL_LOAD_AUTO);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-				SOIL_free_image_data(image);
-
-
-				glUniform1i(glGetUniformLocation(*shaderProgram, "texOne"), 0);
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				loadSharderAttributes();
+				loadAllTexturesFromFile();
 			}
+
+
 
 
 			firstSprite = false;												//First sprite has been made. The rest will not load resources.
 		}
-
 
 		~Sprite()
 		{
 			//Delete shader program.
 		}
 
+
+		void loadAllTexturesFromFile()
+		{
+			LOG_DEBUG("Loading textures from files.");
+
+			for (int i = 0; i < TEXTURE_COUNT; i++)
+			{
+				textures[0] = new GLuint;
+			}
+			glGenTextures(1, *textures);
+
+			int width, height;
+			unsigned char* image;
+			float x, y, widthT, heightT;
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, *textures[0]);
+			image = SOIL_load_image("./assets/test.png", &width, &height, 0, SOIL_LOAD_AUTO);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			SOIL_free_image_data(image);
+
+
+			glUniform1i(glGetUniformLocation(*shaderProgram, "texOne"), 0);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
 
 		void draw()
 		{
@@ -174,22 +176,14 @@ class Sprite
 			glActiveTexture(GL_TEXTURE1);
 
 
-			// float* UV = returnUVCoordsFromFrameNumber(0, ANIMATION_COLUMNS, ANIMATION_ROWS);
-
-			// GLfloat vertices[] = {
-            //
-			// 	0.5f, 	1.0f,		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[1], 	// Left 	Top
-			// 	1.0f, 	1.0f,		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[1], 	// Right 	Top
-			// 	0.5f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[3],	// Left 	Bottom
-			// 	1.0f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[3] 	// Right 	Bottom
-			// };//X 		Y 			R 		G 		B			U 		V
+			float* UV = returnUVCoordsFromFrameNumber(0, 1, 1);
 
 			GLfloat vertices[] = {
 
-				0.5f, 	1.0f,		1.0f,	1.0f, 	1.0f,		0, 		0, 	// Left 	Top
-				1.0f, 	1.0f,		1.0f,	1.0f, 	1.0f,		1.0f,  	0, 	// Right 	Top
-				0.5f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		0, 		1.0f,	// Left 	Bottom
-				1.0f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		1.0f, 	1.0f 	// Right 	Bottom
+				0.5f,	1.0f,		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[1], 	// Left 	Top
+				1.0f, 	1.0f,		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[1], 	// Right 	Top
+				0.5f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[3],	// Left 	Bottom
+				1.0f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[3] 	// Right 	Bottom
 			};//X 		Y 			R 		G 		B			U 		V
 
 
@@ -199,8 +193,8 @@ class Sprite
 
 
 			GLuint elements[] = {
-				0, 1, 2,
-				2, 3, 0
+				0, 1, 3,
+				3, 2, 0
 
 			};
 
