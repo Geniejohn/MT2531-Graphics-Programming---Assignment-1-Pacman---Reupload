@@ -14,5 +14,5 @@ enum Texture
 
 enum Direction
 {
-	left, up, right, down, still,
+	still, left, up, right, down,
 };
