@@ -51,67 +51,6 @@ class Level
 		}
 
 
-		//Returns a pointer to array with subcoordinates of tile with given ID:
-		int* getTilePos(int ID)
-		{
-			if(ID < 0 || ID > (mapWidth*mapHeight)-1)//ID is not in range.
-			{
-				LOG_DEBUG("Did not fetch position of tile since ID is out of range.");
-				int* fail = new int[];
-				fail = {-2, -2};
-				return fail;
-			}
-			else									//ID is in range.
-			{
-				return (tilePtrs[ID]->retPos());	//Fetch position from wanted tile.
-			}
-		}
-
-
-		//Finds adjecant tile, returns -1 if no tile in that direction, -2 if dir is out of range:
-		int findNextTile(int ID, int dir)			//‘dir’: 0=left, 1=up, 2=right, 3=down.
-		{
-			switch(dir)
-			{
-			case left: if(ID%mapWidth != 1)			//Not on the left map edge.
-					{
-						return (ID-1);
-					}
-					else
-					{
-						return -1;					//No tile to the left.
-					}
-			case up: if(ID/mapWidth != 0)			//Not on the upper map edge.
-					{
-						return (ID-mapWidth);		//Tile above.
-					}
-					else
-					{
-						return -1;					//No tile above.
-					}
-			case right: if(ID%mapWidth != 0)		//Not on the rigth map edge.
-					{
-						return (ID+1);
-					}
-					else
-					{
-						return -1;					//No tile to the right.
-					}
-													//Not on the lower map edge.
-			case down: if(ID/mapWidth !=  mapHeight-1)
-					{
-						return (ID+mapWidth);		//Tile below.
-					}
-					else
-					{
-						return -1;					//No tile below.
-					}
-			default: break;
-			}
-			return -2;								//‘dir’ neither left, up, right or down.
-		}
-
-
 		//Finds the furthest open tile in direction ‘dir’, returns ID of that tile or -2 if dir is out of range:
 		int findDestination(int ID, int dir)
 		{
@@ -220,12 +159,73 @@ class Level
 		}
 
 
+		//Returns a pointer to array with subcoordinates of tile with given ID:
+		int* getTilePos(int ID)
+		{
+			if(ID < 0 || ID > (mapWidth*mapHeight)-1)//ID is not in range.
+			{
+				LOG_DEBUG("Did not fetch position of tile since ID is out of range.");
+				int* fail = new int[];
+				fail = {-2, -2};
+				return fail;
+			}
+			else									//ID is in range.
+			{
+				return (tilePtrs[ID]->retPos());	//Fetch position from wanted tile.
+			}
+		}
+
+
 		//Takes ID of current position's tile-ID, and direction dir,
 		//returns pointer to array with x and y position of tile farthest
 		//in the given direction:
 		int* getDestinationPos(int ID, int dir)		//‘dir’: 0=left, 1=up, 2=right, 3=down.
 		{
 			return(getTilePos(findDestination(ID, dir)));		//Finds dest + fetch pos.
+		}
+
+
+		//Finds adjecant tile, returns -1 if no tile in that direction, -2 if dir is out of range:
+		int findNextTile(int ID, int dir)			//‘dir’: 0=left, 1=up, 2=right, 3=down.
+		{
+			switch(dir)
+			{
+			case left: if(ID%mapWidth != 1)			//Not on the left map edge.
+					{
+						return (ID-1);
+					}
+					else
+					{
+						return -1;					//No tile to the left.
+					}
+			case up: if(ID/mapWidth != 0)			//Not on the upper map edge.
+					{
+						return (ID-mapWidth);		//Tile above.
+					}
+					else
+					{
+						return -1;					//No tile above.
+					}
+			case right: if(ID%mapWidth != 0)		//Not on the rigth map edge.
+					{
+						return (ID+1);
+					}
+					else
+					{
+						return -1;					//No tile to the right.
+					}
+													//Not on the lower map edge.
+			case down: if(ID/mapWidth !=  mapHeight-1)
+					{
+						return (ID+mapWidth);		//Tile below.
+					}
+					else
+					{
+						return -1;					//No tile below.
+					}
+			default: break;
+			}
+			return -2;								//‘dir’ neither left, up, right or down.
 		}
 
 };

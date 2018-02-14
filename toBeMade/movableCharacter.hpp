@@ -1,5 +1,9 @@
 #include "sprite.hpp"
 #include "logger.h"
+#include "level.hpp"
+#include "glm/glm/glm.hpp"
+#include "spriteAnimated.hpp"
+
 
 //Each space in the map except for the walls are tiles:
 class MovableCharacter
@@ -11,18 +15,22 @@ class MovableCharacter
 		int type;												//Enum for character-type.
 		int dir;												//Current movement-direction.
 		int desiredDir;											//Desired movement-direction.
-		Sprite sprite;
+		SpriteAnimated spriteAnimated;
+		bool inTileCenter;
+		Level level;
 
 	public:
 		//Constructor:
 		MovableCharacter(int Id, int x, int y, int typ)
 		{
+			inTileCenter = true;								//Starts in center of tile.
+			tileID = Id;
 			xPos = x;
 			yPos = y;
 			type = typ;
 			dir = 2;											//Right.
 			desiredDir = 2;										//Right.
-			sprite = new AnimatedSprite(typ);					//Creates new sprite of wanted type.
+			spriteAnimated = new SpriteAnimated(typ);			//Creates new sprite of wanted type.
 		}
 
 
@@ -48,16 +56,9 @@ class MovableCharacter
 
 
 		//Change direction:
-		void changeDir(int d)
+		void changeDir()
 		{
-			if(d < 0 || d > 3)									//'d' out of range.
-			{
-				LOG_DEBUG("Direction-argument is out of range(0-3).");
-			}
-			else												//'d' in range.
-			{
-				updateDir(d);
-			}
+			updateDir();
 		}
 
 
@@ -76,10 +77,9 @@ class MovableCharacter
 
 
 		//Update direction:
-		void updateDir(int d)
+		void updateDir()
 		{
-			dir = d;
-			//Update sprites etc.
+			dir = desiredDir;
 		}
 
 
@@ -90,5 +90,50 @@ class MovableCharacter
 			//Do more?
 		}
 
+
+		void move();
+		{
+			switch (dir)
+			{
+				//case left: xPos -= deltaTime*speed;
+				//break;
+
+				//case up: yPos += deltaTime*speed;
+				//break;
+
+				//case right: xPos += deltaTime*speed;
+				//break;
+
+				//case down: xPos -= deltaTime*speed;
+				//break;
+
+				//case still:										//Stays still.
+				//break;
+
+				default: LOG_DEBUG("Direction out of range.");
+				break;
+			}
+
+			spriteAnimated.update(glm::vec2(xPos, yPos), dir);	//Call update to run animation.
+		}
+
+
+		//Each frame, after input possibly changes desiredDir, do:
+		void update()
+		{
+			//Can change direction, traversable tile in desired direction:
+			if(inTileCenter == true && level.findNextTile(tileID, desiredDir))
+			{
+				int* tPos = level.getTilePos(tileID);			//Finds position of current tile.
+
+				//Snaps to tile before changing direction:
+				xPos = tPos[0];
+				yPos = tPos[1];
+
+				changeDir();
+			}
+
+			move();												//Change position and update sprite.
+		}
 
 };
