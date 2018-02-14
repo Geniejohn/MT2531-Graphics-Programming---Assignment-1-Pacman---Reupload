@@ -10,3 +10,8 @@ enum Texture
 {
 	empty, pellet, upgrade,
 };
+
+enum Direction
+{
+	left, up, right, down,
+};
