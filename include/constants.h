@@ -13,6 +13,11 @@ enum Texture
 	empty, pellet, upgrade,
 };
 
+enum Character
+{
+	pacman, ghost,
+};
+
 enum Direction
 {
 	still, left, up, right, down,
