@@ -98,9 +98,9 @@ class GameLoop
 
 
 			sprite = new Sprite(
-				glm::vec2(0,	0),								//Position.
-				glm::vec2(0.5f,	0.5f),							//Size.
-				glm::vec2(1,	1),								//Sprite sheetPosition.
+				glm::vec2(0,	0),												//Position.
+				glm::vec2(0.5f,	0.5f),											//Size.
+				glm::vec2(1,	1),												//Sprite sheetPosition.
 				empty);
 
 

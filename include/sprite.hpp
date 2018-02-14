@@ -33,6 +33,7 @@ class Sprite
 		GLuint* textures[TEXTURE_COUNT];										//Holds the textures for all possible sprites in the game.
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
+		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
 
         //
 		// char* loadTextureFromFile(char* path, int no)
@@ -81,10 +82,30 @@ class Sprite
 			return (p);
 		}
 
+		//Setting up attributes for shaderProgram:
+		void loadSharderAttributes()
+		{
+			GLint posAttrib = glGetAttribLocation(*shaderProgram, "position");
+			glEnableVertexAttribArray(posAttrib);
+			glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+
+			GLint colAttrib = glGetAttribLocation(*shaderProgram, "color");
+			glEnableVertexAttribArray(colAttrib);
+			glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+
+			GLint texAttrib = glGetAttribLocation(*shaderProgram, "texcoord");
+			glEnableVertexAttribArray(texAttrib);
+			glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+		}
+
 	public:
-		Sprite(glm::vec2 worldPos, glm::vec2 size, glm::vec2 sheetPos, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
+		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, glm::vec2 sheetPos, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
+
+			pos = worldPos;
+			size = spriteSize;
+
 																		//UV is vec4(startU, startV, endU, endV).
 			glBindVertexArray(vao);
 			glGenVertexArrays(1, &vao);
@@ -102,59 +123,51 @@ class Sprite
 				LOG_DEBUG("Creating shaderProgram.");
 				shaderProgram = new GLuint;
 				*shaderProgram = create_program("vertex.vert", "fragment.frag");
+
+				loadSharderAttributes();
+				loadAllTexturesFromFile();
 			}
 
-			GLint posAttrib = glGetAttribLocation(*shaderProgram, "position");
-			glEnableVertexAttribArray(posAttrib);
-			glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
 
-			GLint colAttrib = glGetAttribLocation(*shaderProgram, "color");
-			glEnableVertexAttribArray(colAttrib);
-			glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-			GLint texAttrib = glGetAttribLocation(*shaderProgram, "texcoord");
-			glEnableVertexAttribArray(texAttrib);
-			glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-
-			if(firstSprite)														//If first sprite to be made:
-			{
-				LOG_DEBUG("Loading textures from files.");
-
-				//for (int i = 0; i < TEXTURE_COUNT; i++)
-				//{
-					textures[0] = new GLuint;
-			//	}
-				glGenTextures(1, *textures);
-
-				int width, height;
-				unsigned char* image;
-				float x, y, widthT, heightT;
-
-				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, *textures[0]);
-				image = SOIL_load_image("./assets/test.png", &width, &height, 0, SOIL_LOAD_AUTO);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-				SOIL_free_image_data(image);
-
-
-				glUniform1i(glGetUniformLocation(*shaderProgram, "texOne"), 0);
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			}
 
 
 			firstSprite = false;												//First sprite has been made. The rest will not load resources.
 		}
-
 
 		~Sprite()
 		{
 			//Delete shader program.
 		}
 
+
+		void loadAllTexturesFromFile()
+		{
+			LOG_DEBUG("Loading textures from files.");
+
+			for (int i = 0; i < TEXTURE_COUNT; i++)
+			{
+				textures[0] = new GLuint;
+			}
+			glGenTextures(1, *textures);
+
+			int width, height;
+			unsigned char* image;
+			float x, y, widthT, heightT;
+
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, *textures[0]);
+			image = SOIL_load_image("./assets/test.png", &width, &height, 0, SOIL_LOAD_AUTO);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			SOIL_free_image_data(image);
+
+
+			glUniform1i(glGetUniformLocation(*shaderProgram, "texOne"), 0);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
 
 		void draw()
 		{
