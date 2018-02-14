@@ -51,11 +51,6 @@ class GameLoop
 		// Initialise GLFW window. Returns -1 if failed.
 		int startup()
 		{
-			/*sprite = new Sprite(
-				glm::vec2(0,0),						//Position.
-				glm::vec2(0,0),						//Size.
-				glm::vec4(0,0,0,0),					//UV
-				empty);*/
 
 			if (!glfwInit())
 			{
@@ -103,6 +98,11 @@ class GameLoop
 			glClearColor(1,1,1,1);
 
 
+			sprite = new Sprite(
+				glm::vec2(0,0),						//Position.
+				glm::vec2(0,0),						//Size.
+				glm::vec4(0,0,0,0),					//UV
+				empty);
 
 
 
@@ -124,7 +124,7 @@ class GameLoop
 		    }
 
 			//dynamic code//
-			//sprite-> draw();
+			sprite-> draw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
