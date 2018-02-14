@@ -34,4 +34,14 @@ class Tile
 			return type;
 		}
 
+		int retX()
+		{
+			return x;
+		}
+
+
+		int retY()
+		{
+			return y;
+		}
 };
