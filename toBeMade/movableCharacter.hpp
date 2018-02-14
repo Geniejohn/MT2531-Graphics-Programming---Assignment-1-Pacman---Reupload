@@ -6,7 +6,7 @@
 #include "cmath"												// abs()
 
 
-//Each space in the map except for the walls are tiles:
+//Base-class for all movable characters:
 class MovableCharacter
 {
 	private:
