@@ -3,6 +3,7 @@
 #include "level.hpp"
 #include "glm/glm/glm.hpp"
 #include "spriteAnimated.hpp"
+#include "cmath"												// abs()
 
 
 //Each space in the map except for the walls are tiles:
@@ -47,11 +48,9 @@ class MovableCharacter
 		}
 
 
-		int* retPos()
+		glm::vec2 retPos()
 		{
-		 	int* pos = new int[2];
-			pos = {xPos, yPos};
-			return pos;
+			return glm::vec2(xPos, yPos);
 		}
 
 
@@ -121,10 +120,12 @@ class MovableCharacter
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{
+			glm::vec2 tPos = level.getTilePos(tileID);				//Finds position of current tile.
+
 			//Can change direction, traversable tile in desired direction:
 			if(inTileCenter == true && level.findNextTile(tileID, desiredDir))
 			{
-				int* tPos = level.getTilePos(tileID);			//Finds position of current tile.
+
 
 				//Snaps to tile before changing direction:
 				xPos = tPos[0];
@@ -134,6 +135,16 @@ class MovableCharacter
 			}
 
 			move();												//Change position and update sprite.
+
+			//Character is within the tolerance-value, and is concidered within the center of its current tile:
+			if(abs(tPos[0] - xPos) < level.retTolerance()[0] && abs(tPos[1] - yPos) < level.retTolerance()[1])
+			{
+				inTileCenter = true;
+			}
+			else												//Not within tolerance-values.
+			{
+				inTileCenter = false;
+			}
 		}
 
 };

@@ -3,6 +3,7 @@
 #include <string>									//(to_string).
 #include "constants.h"
 #include "logger.h"
+#include "glm/glm/glm.hpp"
 
 // #ifdef _WIN32 // Windows 10 (Visual Studio)
 // #define skip
@@ -16,8 +17,12 @@
 class Level
 {
 	private:
-
 		string level;
+
+		//Distance from center which counts as center:
+		float cToleranceX;
+		float cToleranceY;
+
 		int mapWidth;
 		int mapHeight;
 		int* tilePtrs;									//Pointer for tile-array.
@@ -136,6 +141,19 @@ class Level
 			{
 				LOG_DEBUG("Didn't find the specified level-file.");
 			}
+
+			//Finished loading variables from file, set tolerance-variables.
+
+			//The tolerance scales with the Gamespace-factor and the amount of tiles in each dimention.
+			//2*HORIZONTAL_GAMESPACE = width of map in world space coordinates.
+			//(1/mapWidth) = Fraction of gamespace occupied by a single tile.
+			//2*HORIZONTAL_GAMESPACE*(1/mapWidth) = (width of gamespace) / (number of tiles in a row).
+			//2*HORIZONTAL_GAMESPACE*(1/mapWidth) = size of a single tile.
+			//Translated: CENTER_TOLERANCE * (Size of tile).
+			//E.G. Given CENTER_TOLERANCE of 0.5f, cToleranceX will be 50% of a single tile's x-dimention.
+			cToleranceX = CENTER_TOLERANCE*2*HORIZONTAL_GAMESPACE*(1/mapWidth);	//Fraction of tile-size.
+			cToleranceY = CENTER_TOLERANCE*2*VERTICAL_GAMESPACE*(1/mapHeight);	//Fraction of tile-size.
+
 		}
 
 
@@ -160,14 +178,12 @@ class Level
 
 
 		//Returns a pointer to array with subcoordinates of tile with given ID:
-		int* getTilePos(int ID)
+		glm::vec2 getTilePos(int ID)
 		{
 			if(ID < 0 || ID > (mapWidth*mapHeight)-1)//ID is not in range.
 			{
 				LOG_DEBUG("Did not fetch position of tile since ID is out of range.");
-				int* fail = new int[];
-				fail = {-2, -2};
-				return fail;
+				return glm::vec2(-2, -2);
 			}
 			else									//ID is in range.
 			{
@@ -179,7 +195,7 @@ class Level
 		//Takes ID of current position's tile-ID, and direction dir,
 		//returns pointer to array with x and y position of tile farthest
 		//in the given direction:
-		int* getDestinationPos(int ID, int dir)		//‘dir’: 0=left, 1=up, 2=right, 3=down.
+		glm::vec2 getDestinationPos(int ID, int dir)		//‘dir’: 0=left, 1=up, 2=right, 3=down.
 		{
 			return(getTilePos(findDestination(ID, dir)));		//Finds dest + fetch pos.
 		}
@@ -226,6 +242,13 @@ class Level
 			default: break;
 			}
 			return -2;								//‘dir’ neither left, up, right or down.
+		}
+
+
+		float* retTolerance()
+		{
+			float* floatPtr = new float[cToleranceX, cToleranceY];
+			return floatPtr;
 		}
 
 };
