@@ -199,8 +199,8 @@ class Sprite
 
 
 			GLuint elements[] = {
-				0, 1, 2,
-				2, 3, 0
+				0, 1, 3,
+				3, 2, 0
 
 			};
 
