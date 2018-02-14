@@ -34,4 +34,14 @@ class Tile
 			return type;
 		}
 
+
+		int* retPos()
+		{
+		 	int* pos = new int[2];
+			pos = {x, y};
+			return pos;
+		}
+
+
+		
 };

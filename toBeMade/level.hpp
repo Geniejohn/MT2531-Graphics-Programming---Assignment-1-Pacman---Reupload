@@ -2,6 +2,7 @@
 #include <string.h>
 #include <string>									//(to_string).
 #include "constants.h"
+#include "logger.h"
 
 // #ifdef _WIN32 // Windows 10 (Visual Studio)
 // #define skip
@@ -15,86 +16,55 @@
 class Level
 {
 	private:
+		
 		string level;
 		int mapWidth;
 		int mapHeight;
-		int* tilePtrs;								//Pointer for tile-array.
+		int* tilePtrs;									//Pointer for tile-array.
 
-	public:
-		//Constructor:
-		//Sets its variables and reads level-file to create tiles for tile-pointer array:
-		Level(int lvl)
+
+		//Returns the type of the tile with the given ID:
+		int retTileType(int ID)
 		{
-			level = "level" + to_string(lvl);		//Dynamic string to load levels dynamically.
+			return (tilePtrs[ID]->retType());			//Calls the Tile-objects returnType.
+		}
 
-			ifstream reader("../levels/" + level);	//Creates ifstream to read level-file.
 
-			if(reader)								//Found the file.
+		//Gets type from a tile in array and returns it:
+		bool isTileEmpty(int ID)
+		{
+			if(ID < 0 || ID > (mapWidth*mapHeight)-1)	//ID is not within range.
 			{
-				reader >> mapWidth;
-				reader >> mapHeight;
-				reader.ignore();					//Ignore newline.
-
-				tilePtrs = new int[mapWidth*mapHeight];
-
-				int k = mapWidth*mapHeight;
-				int tempID;
-				int horizIncrement = HORIZONTAL_GAMESPACE/mapWidth;
-				int vertiIncrement = VERTICAL_GAMESPACE/mapHeight;
-				int xPos, yPos;
-
-				for (int i = 0; i < k; i++) 		//Reads level-file and creates tiles.
+				return 0;
+			}
+			else										//ID is within range.
+			{
+				if(tiles[ID] != NULL)					//Tile with that ID exists.
 				{
-					reader >> tempID;
-					if(tempID != 1)					//Not wall.
-					{
-													//'-1.0f' is left border, then add padding.
-													//'HORIZONTAL_GAMESPACE' determines padding,
-													//add 'horizIncrement' per previous element in row.
-													//'i%mapWidth' gives number for that row.
-													//Formula: Borderpos + padding + increment.
-						xPos = (-1+(2-HORIZONTAL_GAMESPACE*2))+((i%mapWidth)*horizIncrement);
-													//'1.0f' is upper border, then add padding.
-													//'VERTICAL_GAMESPACE' determines padding.
-													//add 'vertiIncrement' per previous element in column.
-													//'i/mapHeight' gives number for that column.
-													//Formula: Borderpos - padding - increment.
-						yPos = (1-(2-VERTICAL_GAMESPACE*2))-((i/mapHeight)*vertiIncrement);
-
-													//Add new tile and make index 'i' in array point to it.
-						tilePtrs[i] = new Tile(i, xPos, yPos, tempID);
-					}
-					else							//Is wall.
-					{
-						tilePtrs[i] = NULL;			//Set pointer for that tile to NULL.
-					}
+					return 1;
 				}
-				reader.close();						//Close ifstream.
+				else									//Tile does not exist(wall).
+				{
+					return 0;
+				}
 			}
-			else
+		}
+
+
+		//Returns a pointer to array with subcoordinates of tile with given ID:
+		int* getTilePos(int ID)
+		{
+			if(ID < 0 || ID > (mapWidth*mapHeight)-1)//ID is not in range.
 			{
-				//LOG: "Didn't find the specified level-file.
+				LOG_DEBUG("Did not fetch position of tile since ID is out of range.");
+				int* fail = new int[];
+				fail = {-2, -2};
+				return fail;
 			}
-		}
-
-
-		//Deconstructor:
-		~Level()
-		{
-			delete tilePtrs;
-		}
-
-		//Return Width:
-		int retW()
-		{
-			return mapWidth;
-		}
-
-
-		//Return Height:
-		int retH()
-		{
-			return mapHeigth;
+			else									//ID is in range.
+			{
+				return (tilePtrs[ID]->retPos());	//Fetch position from wanted tile.
+			}
 		}
 
 
@@ -170,30 +140,91 @@ class Level
 			}
 		}
 
-		//Gets type from a tile in array and returns it:
-		bool isTileEmpty(int ID)
+
+	public:
+		//Constructor:
+		//Sets its variables and reads level-file to create tiles for tile-pointer array:
+		Level(int lvl)
 		{
-			if(ID < 0 || ID > (mapWidth*mapHeight)-1)	//ID is not within range.
+			level = "level" + to_string(lvl);		//Dynamic string to load levels dynamically.
+
+			ifstream reader("../levels/" + level);	//Creates ifstream to read level-file.
+
+			if(reader)								//Found the file.
 			{
-				return 0;
+				reader >> mapWidth;
+				reader >> mapHeight;
+				reader.ignore();					//Ignore newline.
+
+				tilePtrs = new int[mapWidth*mapHeight];
+
+				int k = mapWidth*mapHeight;
+				int tempID;
+				int horizIncrement = HORIZONTAL_GAMESPACE/mapWidth;
+				int vertiIncrement = VERTICAL_GAMESPACE/mapHeight;
+				int xPos, yPos;
+
+				for (int i = 0; i < k; i++) 		//Reads level-file and creates tiles.
+				{
+					reader >> tempID;
+					if(tempID != 1)					//Not wall.
+					{
+													//'-1.0f' is left border, then add padding.
+													//'HORIZONTAL_GAMESPACE' determines padding,
+													//add 'horizIncrement' per previous element in row.
+													//'i%mapWidth' gives number for that row.
+													//Formula: Borderpos + padding + increment.
+						xPos = (-1+(2-HORIZONTAL_GAMESPACE*2))+((i%mapWidth)*horizIncrement);
+													//'1.0f' is upper border, then add padding.
+													//'VERTICAL_GAMESPACE' determines padding.
+													//add 'vertiIncrement' per previous element in column.
+													//'i/mapHeight' gives number for that column.
+													//Formula: Borderpos - padding - increment.
+						yPos = (1-(2-VERTICAL_GAMESPACE*2))-((i/mapHeight)*vertiIncrement);
+
+													//Add new tile and make index 'i' in array point to it.
+						tilePtrs[i] = new Tile(i, xPos, yPos, tempID);
+					}
+					else							//Is wall.
+					{
+						tilePtrs[i] = NULL;			//Set pointer for wall to NULL.
+					}
+				}
+				reader.close();						//Close ifstream.
 			}
-			else										//ID is within range.
+			else
 			{
-				if(tiles[ID] != NULL)					//Tile with that ID exists.
-				{
-					return 1;
-				}
-				else									//Tile does not exist(wall).
-				{
-					return 0;
-				}
+				LOG_DEBUG("Didn't find the specified level-file.");
 			}
 		}
 
 
-		//Returns the type of the tile with the given ID:
-		int retTileType(int ID)
+		//Deconstructor:
+		~Level()
 		{
-			return (tilePtrs[ID]->retType());			//Calls the Tile-objects returnType.
+			delete tilePtrs;
 		}
+
+		//Return Width:
+		int retW()
+		{
+			return mapWidth;
+		}
+
+
+		//Return Height:
+		int retH()
+		{
+			return mapHeigth;
+		}
+
+
+		//Takes ID of current position's tile-ID, and direction dir,
+		//returns pointer to array with x and y position of tile farthest
+		//in the given direction:
+		int* getDestinationPos(int ID, int dir)		//‘dir’: 0=left, 1=up, 2=right, 3=down.
+		{
+			return(getTilePos(findDestination(ID, dir)));		//Finds dest + fetch pos.
+		}
+
 };
