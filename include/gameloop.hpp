@@ -51,11 +51,11 @@ class GameLoop
 		// Initialise GLFW window. Returns -1 if failed.
 		int startup()
 		{
-			sprite = new Sprite(
+			/*sprite = new Sprite(
 				glm::vec2(0,0),						//Position.
 				glm::vec2(0,0),						//Size.
 				glm::vec4(0,0,0,0),					//UV
-				empty);
+				empty);*/
 
 			if (!glfwInit())
 			{
