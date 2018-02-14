@@ -5,7 +5,7 @@ const int TEXTURE_COUNT = 1;					//The total number of textures that will be loa
 const int GHOST_AMOUNT = 4;
 const float HORIZONTAL_GAMESPACE = 0.f;			//Proportion of window containing the game.
 const float VERTICAL_GAMESPACE = 0.7f;			//Proportion of window containing the game.
-const float CENTER_TOLERANCE = 1.0f;			//Tolereance for character snap to center.
+const float CENTER_TOLERANCE = 0.25f;			//Tolereance for character snap to center.
 
 
 enum Texture
