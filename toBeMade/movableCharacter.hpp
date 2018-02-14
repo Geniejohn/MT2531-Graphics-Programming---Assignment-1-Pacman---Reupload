@@ -22,16 +22,16 @@ class MovableCharacter
 
 	public:
 		//Constructor:
-		MovableCharacter(int Id, int x, int y, int typ)
+		MovableCharacter(int Id, int typ)
 		{
+			spriteAnimated = new SpriteAnimated(typ);			//Creates new sprite of wanted type.
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
-			xPos = x;
-			yPos = y;
+			xPos = level.getTilePos()[0];
+			yPos = level.getTilePos()[1];
 			type = typ;
 			dir = 2;											//Right.
 			desiredDir = 2;										//Right.
-			spriteAnimated = new SpriteAnimated(typ);			//Creates new sprite of wanted type.
 		}
 
 
