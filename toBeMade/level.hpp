@@ -16,7 +16,7 @@
 class Level
 {
 	private:
-		
+
 		string level;
 		int mapWidth;
 		int mapHeight;
@@ -73,7 +73,7 @@ class Level
 		{
 			switch(dir)
 			{
-			case 0: if(ID%mapWidth != 1)			//Not on the left map edge.
+			case left: if(ID%mapWidth != 1)			//Not on the left map edge.
 					{
 						return (ID-1);
 					}
@@ -81,7 +81,7 @@ class Level
 					{
 						return -1;					//No tile to the left.
 					}
-			case 1: if(ID/mapWidth != 0)			//Not on the upper map edge.
+			case up: if(ID/mapWidth != 0)			//Not on the upper map edge.
 					{
 						return (ID-mapWidth);		//Tile above.
 					}
@@ -89,7 +89,7 @@ class Level
 					{
 						return -1;					//No tile above.
 					}
-			case 2: if(ID%mapWidth != 0)			//Not on the rigth map edge.
+			case right: if(ID%mapWidth != 0)		//Not on the rigth map edge.
 					{
 						return (ID+1);
 					}
@@ -97,7 +97,8 @@ class Level
 					{
 						return -1;					//No tile to the right.
 					}
-			case 3: if(ID/mapWidth !=  mapHeight-1)	//Not on the lower map edge.
+													//Not on the lower map edge.
+			case down: if(ID/mapWidth !=  mapHeight-1)
 					{
 						return (ID+mapWidth);		//Tile below.
 					}
@@ -107,7 +108,7 @@ class Level
 					}
 			default: break;
 			}
-			return -2;								//‘dir’ neither 0, 1, 2, or 3.
+			return -2;								//‘dir’ neither left, up, right or down.
 		}
 
 
