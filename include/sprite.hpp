@@ -11,6 +11,10 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
+
+
 
 #include "SOIL.h"
 
@@ -58,42 +62,58 @@ class Sprite
 		// Returns a pointer to a float array with u1, v1, u2, v2.
 		float* returnUVCoordsFromFrameNumber (int frameNumber, int uDivisions, int vDivisions)
 		{
-		    float uD = uDivisions;                                      // Saves as float for division
-		    float vD = vDivisions;                                      // calculation.
-		    float uSize = 1/uD;                                         // Size of one sprite in sheet.
-		    float vSize = 1/vD;
+			float uD = uDivisions;                                      // Saves as float for division
+			float vD = vDivisions;                                      // calculation.
+			float uSize = 1/uD;                                         // Size of one sprite in sheet.
+			float vSize = 1/vD;
 
-		    float uCoord2 = ((frameNumber % uDivisions)+1)/uD;          // Modulo to not care about row nr.
-		    float uCoord1 = uCoord2 - uSize;                            // u1 is uSize away from u2.
+			float uCoord2 = ((frameNumber % uDivisions)+1)/uD;          // Modulo to not care about row nr.
+			float uCoord1 = uCoord2 - uSize;                            // u1 is uSize away from u2.
 
-		    float vCoord2 = (std::ceil((frameNumber+1)/uD))/vD;         // Divide by uD to not care about
-		    float vCoord1 = vCoord2 - vSize;                            // Column nr.
+			float vCoord2 = (std::ceil((frameNumber+1)/uD))/vD;         // Divide by uD to not care about
+			float vCoord1 = vCoord2 - vSize;                            // Column nr.
 
-		    float coords[4] = {uCoord1, vCoord1, uCoord2, vCoord2};
-		    float *p = new float[4];
-		    p = coords;
-		    return (p);
+			float coords[4] = {uCoord1, vCoord1, uCoord2, vCoord2};
+			float *p = new float[4];
+			p = coords;
+			return (p);
 		}
 
 	public:
 		Sprite(glm::vec2 worldPos, glm::vec2 size, glm::vec4 uv, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
-		{																				//UV is vec4(startU, startV, endU, endV).
+		{
+			LOG_DEBUG("sprite constructor started.");
+																		//UV is vec4(startU, startV, endU, endV).
 			glBindVertexArray(vao);
+
+			LOG_DEBUG("VAO 1.");
+
 			glGenVertexArrays(1, &vao);
+
+			LOG_DEBUG("VAO 2.");
+
 			glBindVertexArray(vao);
+
+			LOG_DEBUG("VAO 3.");
 
 
 			glGenBuffers(1, &vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
 
+			LOG_DEBUG("VBO created.");
 
 			glGenBuffers(1, &ebo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
 
+			LOG_DEBUG("EBO created.");
+
+
 			if(firstSprite)														//If first sprite to be made:
-			{	shaderProgram = new GLuint;
+			{
+				LOG_DEBUG("Creating shaderProgram.");
+				shaderProgram = new GLuint;
 				*shaderProgram = create_program("vertex.vert", "fragment.frag");
 			}
 
