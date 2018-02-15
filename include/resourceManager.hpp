@@ -47,6 +47,7 @@ class ResourceManager
 
 	public:
 
+		GLFWwindow* window;
 		GLuint shaderProgram;													//ShaderProgram loaded once, shared between all sprites.
 
 		ResourceManager()
@@ -72,9 +73,59 @@ class ResourceManager
 
 		int startup()
 		{
+			if (!glfwInit())
+			{
+				LOG_DEBUG("Failed to initialize GLFW\n");
+				getchar();
+				return -1;
+			}
+
+			glfwWindowHint(GLFW_SAMPLES, 4);
+			glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 				// To make MacOS happy; should not be needed
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+
+			window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Pacman", NULL, NULL);
+			glfwMakeContextCurrent(window);
+			if (window == NULL) {
+				LOG_DEBUG("Failed to open GLFW window.\n");
+				getchar();
+				glfwTerminate();
+				return -1;
+			}
+
+
+			glewExperimental = GL_TRUE;
+			// Initialize GLEW
+			if (glewInit() != GLEW_OK) {
+				LOG_DEBUG("Failed to initialize GLEW\n");
+				getchar();
+				glfwTerminate();
+				return -1;
+			}
+
+
+			glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
+			glfwSwapInterval(1);
+
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			glClearColor(1,1,1,1);
+
+
+
 			shaderProgram = create_program("vertex.vert", "fragment.frag");
 
-		
+
+			GLuint vao;																//Vertex array with the 4 verticies.
+			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
+			glBindVertexArray(vao);
+
 			glGenTextures(TEXTURE_COUNT, textures);
 
 			for(int i = 0; i < TEXTURE_COUNT; i++)
@@ -83,6 +134,12 @@ class ResourceManager
 			}
 
 			return 0;
+		}
+
+		void shutdown()
+		{
+			glfwDestroyWindow(window);
+			glfwTerminate();
 		}
 
 		GLuint getTexture(Texture textureIndex)

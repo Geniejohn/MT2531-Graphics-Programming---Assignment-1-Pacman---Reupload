@@ -19,7 +19,7 @@
 
 extern ResourceManager resourceManager;
 
-extern GLuint vao;																//Vertex array with the 4 verticies.
+// extern GLuint vao;																//Vertex array with the 4 verticies.
 
 
 class Sprite
@@ -60,10 +60,12 @@ class Sprite
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
+			LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
 
 			pos = worldPos;
 			size = spriteSize;
 			index = textureIndex;
+
 
 			GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 			GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
@@ -77,24 +79,7 @@ class Sprite
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
 
-
-            //
-            //
-			// LOG_DEBUG("Alpha");
-			// GLint posAttrib = glGetAttribLocation(resourceManager.shaderProgram, "position");
-			// glEnableVertexAttribArray(posAttrib);
-			// glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
-            //
-			// LOG_DEBUG("Bravo");
-			// GLint colAttrib = glGetAttribLocation(resourceManager.shaderProgram, "color");
-			// glEnableVertexAttribArray(colAttrib);
-			// glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-            //
-			// LOG_DEBUG("Charlie");
-			// GLint texAttrib = glGetAttribLocation(resourceManager.shaderProgram, "texcoord");
-			// glEnableVertexAttribArray(texAttrib);
-			// glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-			// LOG_DEBUG("Delta");
+			LOG_DEBUG("Constructor end: VBO: %d, EBO: %d", vbo, ebo);
 
 		}
 
@@ -105,17 +90,13 @@ class Sprite
 
 		void draw()
 		{
-			// Use a Vertex Array Object
-			//glBindVertexArray(vao);
-			//glActiveTexture(GL_TEXTURE0 +1);
+			// LOG_DEBUG("Draw start: VBO: %d, EBO: %d", vbo, ebo);
+
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(index));
-
-
-
 
 		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
 
-			LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+			// LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
 
 			GLfloat vertices[] = {
@@ -125,11 +106,11 @@ class Sprite
 				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV[2], 	UV[3] 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
-			LOG_DEBUG("Echo");
+			// LOG_DEBUG("Echo");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
-			LOG_DEBUG("Foxtrot");
+			// LOG_DEBUG("Foxtrot");
 
 
 			GLuint elements[] = {
@@ -139,15 +120,17 @@ class Sprite
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
-			LOG_DEBUG("Golf");
+			// LOG_DEBUG("Golf");
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
-			LOG_DEBUG("Infra");
+			// LOG_DEBUG("Infra");
 
 			// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			// glBindBuffer(GL_ARRAY_BUFFER, 0);
 			//glBindVertexArray(0);
-			LOG_DEBUG("Jimmie");
+			// LOG_DEBUG("Jimmie");
+
+			// LOG_DEBUG("Draw end: VBO: %d, EBO: %d", vbo, ebo);
 
 
 		}
