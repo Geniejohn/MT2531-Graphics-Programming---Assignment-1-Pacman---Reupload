@@ -35,27 +35,6 @@ class Level
 		}
 
 
-		//Gets type from a tile in array and returns it:
-		bool isTileEmpty(int ID)
-		{
-			if(ID < 0 || ID > (mapWidth*mapHeight)-1)	//ID is not within range.
-			{
-				return 0;
-			}
-			else										//ID is within range.
-			{
-				if(tiles[ID] != NULL)					//Tile with that ID exists.
-				{
-					return 1;
-				}
-				else									//Tile does not exist(wall).
-				{
-					return 0;
-				}
-			}
-		}
-
-
 		//Finds the furthest open tile in direction ‘dir’, returns ID of that tile or -2 if dir is out of range:
 		int findDestination(int ID, int dir)
 		{
@@ -242,6 +221,27 @@ class Level
 			default: break;
 			}
 			return -2;								//‘dir’ neither left, up, right or down.
+		}
+
+
+		//Gets type from a tile in array and returns it:
+		bool isTileEmpty(int ID)
+		{
+			if(ID < 0 || ID > (mapWidth*mapHeight)-1)	//ID is not within range.
+			{
+				return 0;
+			}
+			else										//ID is within range.
+			{
+				if(tiles[ID] != NULL)					//Tile with that ID exists.
+				{
+					return 1;
+				}
+				else									//Tile does not exist(wall).
+				{
+					return 0;
+				}
+			}
 		}
 
 
