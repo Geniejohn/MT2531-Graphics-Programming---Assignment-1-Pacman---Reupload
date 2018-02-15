@@ -5,6 +5,8 @@
 #include "constants.h"
 #include "resourceManager.hpp"
 
+#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
+
 ResourceManager resourceManager;
 GameLoop gameLoop;
 float dt;																		//DeltaTime: the time it took to complete the last frame.

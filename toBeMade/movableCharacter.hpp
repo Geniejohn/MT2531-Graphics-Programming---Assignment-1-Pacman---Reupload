@@ -13,13 +13,13 @@ extern GameUI gameUI;
 class MovableCharacter
 {
 	private:
-		glm::vec2 pos;
 		int type;												//Enum for character-type.
 		glm::vec2 speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
 
 	protected:
+		glm::vec2 pos;
 		int dir;												//Current movement-direction.
 		int desiredDir;											//Desired movement-direction.
 		int tileID;												//ID the tile occupied by character.
