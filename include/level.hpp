@@ -97,8 +97,6 @@ class Level
 
 
 				int tempID;
-				int horizIncrement = HORIZONTAL_GAMESPACE/mapWidth;
-				int vertiIncrement = VERTICAL_GAMESPACE/mapHeight;
 				tSize = glm::vec2((2*HORIZONTAL_GAMESPACE)/float(mapWidth), (2*VERTICAL_GAMESPACE)/float(mapHeight));
 				float xPos, yPos;
 
@@ -113,7 +111,7 @@ class Level
 													//Formula: Borderpos + padding + increment.
 					// -1 + ( /2)
 						xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
-						yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapHeight)*tSize.y));
+						yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
 													//Add new tile and make index 'i' in array point to it.
 					 tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));

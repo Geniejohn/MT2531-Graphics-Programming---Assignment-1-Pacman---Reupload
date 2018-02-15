@@ -12,9 +12,10 @@ const float CENTER_TOLERANCE = 0.15f;			//Tolereance for character snap to cente
 const float GHOST_SPEED = 2.8f;
 const float PACMAN_SPEED = 2.5f;
 
+const int TEXTURE_COUNT = 1;					//The total number of textures that will be loaded.
 enum Texture : int									//The different textrues a static sprite can have.
 {
-	test, pacSheet, ghostSheet, empty, pellet, upgrade, wall, 
+ 	pellet, empty, pacSheet, ghostSheet, upgrade, wall,
 };
 
 enum Animation									//The different sprite sheet animations in the game.
@@ -34,11 +35,12 @@ enum Direction
 };
 const int STARTING_DIRECTION = right;			//Below 'Direction' definition.
 
-const int TEXTURE_COUNT = 3;					//The total number of textures that will be loaded.
 //Can not be const:
-char FILES[3][50] =								//List of paths to all the files used by the game.
+char FILES[5][50] =								//List of paths to all the files used by the game.
 {												//should be automated to read from folder instead in the future.
-	"./assets/test.png",
+	"./assets/pellet.png",
+	"./assets/empty.png",
 	"./assets/pacman.png",
-	"./assets/ghost.png"
+	"./assets/ghost.png",
+	"./assets/test.png"
 };

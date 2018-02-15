@@ -26,7 +26,10 @@ class Tile
 			size = s;
 			type = typ;
 			//LOG_DEBUG("posX: %f, posY: %f, sizeX: %f, sizeY: %f, Texture: %d", pos.x, pos.y, size.x, size.y, typ);
-			sprite = new Sprite(pos, size, type);				//Creates new sprite of the wanted type.
+			if(type != wall)
+			{
+				sprite = new Sprite(pos, size, type);				//Creates new sprite of the wanted type.
+			}
 		}
 
 
