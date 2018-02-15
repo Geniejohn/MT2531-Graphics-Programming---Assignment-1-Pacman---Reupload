@@ -97,6 +97,7 @@ class Sprite
 		void setOrigin(glm::vec2 origin_)
 		{
 			origin = origin_;
+			setPosition(pos);
 		}
 
 		void draw()
