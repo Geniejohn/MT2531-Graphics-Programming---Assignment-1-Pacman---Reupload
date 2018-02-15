@@ -15,7 +15,7 @@
 #include "glm/glm/gtc/type_ptr.hpp"
 
 #include "sprite.hpp"
-#include "spriteAnimated.hpp"
+//#include "spriteAnimated.hpp"
 #include "constants.h"
 
 
@@ -25,7 +25,9 @@ class GameLoop
       bool running;			//True as long as game is running.
 
 	  Sprite* sprite;		//test sprite.
-	  Sprite* sprite2;
+	  Sprite* sprite2;		//test sprite.
+
+	  //SpriteAnimated* animation;
 
     public:
         GameLoop()
@@ -33,32 +35,42 @@ class GameLoop
 			running = true;
 		}
 
+
 		~GameLoop()
 		{
 			delete sprite;
+			delete sprite2;
 		}
 
 
 		void makeSprites()
 		{
-
-			sprite = new Sprite(
-				glm::vec2(-0.5f,	0.5f),										//Position.
-				glm::vec2(1,		1),											//Size.
-				empty);
-
 			sprite2 = new Sprite(
-				glm::vec2(-1,		0),										//Position.
+				glm::vec2(-0.0f,	0.0f),										//Position.
 				glm::vec2(1,		1),											//Size.
 				test);
+			sprite = new Sprite(
+				glm::vec2(-1,	1),										//Position.
+				glm::vec2(1,		1),											//Size.
+				test);
+
+		// 	animation = new SpriteAnimated(
+		// 		glm::vec2(0,		0),										//Position.
+		// 		glm::vec2(1,		1),											//Size.
+		// 		pacmanAnimation);
+		//
 		}
 
         void run()
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		//s	animation-> update(right);
+
 			sprite-> draw();
 			sprite2-> draw();
+
+			//animation-> draw();
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();

@@ -11,7 +11,7 @@ ResourceManager resourceManager;
 GameLoop gameLoop;
 float dt;																		//DeltaTime: the time it took to complete the last frame.
 
-int main(void)
+int main()
 {
 
 	if(resourceManager.startup() != 0)											//Failed to load any of the textures:
@@ -35,7 +35,8 @@ int main(void)
 		double currentTime = glfwGetTime();
 		if (currentTime - lastTime >= 1.0)  									//If last prinf() was more than 1sec ago
 		{
-			dt =  1000.0 / float(nbFrames);										//Printf and reset
+			double temp =  1000.0 / double(nbFrames);										//Printf and reset
+			dt = float(temp);
 			LOG_DEBUG("dt: %f",dt);
 			nbFrames = 0;
 			lastTime += 1.0;

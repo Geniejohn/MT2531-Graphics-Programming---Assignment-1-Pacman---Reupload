@@ -22,21 +22,22 @@ extern ResourceManager resourceManager;
 // extern GLuint vao;																//Vertex array with the 4 verticies.
 
 
-class Sprite
+class Sprite																	//Is base-class for spriteAnimation.
 {
 	private:
+		Texture index;															//Tell the sprite what texture it's using.
+	protected:
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
 		glm::vec2 origin;
 		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
-		Texture index;															//Tell the sprite what texture it's using.
 
 
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
 
 
-	protected:
+
 		// Gets the index of a frame and returns that frames coordinates on the spritesheet.
 		// Function assumes that the first frame on sheet has index 0.
 		// Returns a pointer to a float array with u1, v1, u2, v2.
@@ -56,9 +57,8 @@ class Sprite
 			glm::vec4 UVCoords = glm::vec4(uCoord1, vCoord1, uCoord2, vCoord2);
 			return UVCoords;
 		}
-
-
 	public:
+
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
@@ -69,9 +69,9 @@ class Sprite
 			index = textureIndex;
 			origin = glm::vec2(size.x / 2, size.y / 2);
 
-			GLuint vbo;																//Vertex buffer object for the 4 vertecies.
-			GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-
+			// GLuint vbo;																//Vertex buffer object for the 4 vertecies.
+			// GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
+            //
 
 			glGenBuffers(1, &vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -135,6 +135,8 @@ class Sprite
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
 			// LOG_DEBUG("Golf");
+
+			resourceManager.loadShaderAttributes();
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
 			// LOG_DEBUG("Infra");
