@@ -16,7 +16,9 @@
 
 #include "sprite.hpp"
 #include "constants.h"
+#include "level.hpp"
 
+extern Level level;
 
 class GameLoop
 {
@@ -72,9 +74,11 @@ class GameLoop
 		        lastTime += 1.0;
 		    }
 
-
-			sprite-> draw();
-			sprite2-> draw();
+			LOG_DEBUG("Will now try to draw level.");
+			level.draw();
+			LOG_DEBUG("Finished drawing level.");
+			//sprite-> draw();
+			//sprite2-> draw();
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();
