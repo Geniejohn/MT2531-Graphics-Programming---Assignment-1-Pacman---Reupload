@@ -14,56 +14,31 @@
 #include "glm/glm/gtc/matrix_transform.hpp"
 #include "glm/glm/gtc/type_ptr.hpp"
 
-
-
-#include "SOIL.h"
-
-#include "shaderload.h"
+#include "resourceManager.hpp"
 #include "constants.h"
 
-extern bool firstSprite;
+extern ResourceManager resourceManager;
+
+extern GLuint vao;																//Vertex array with the 4 verticies.
+
 
 class Sprite
 {
 	private:
-		GLuint vao;																//Vertex array with the 4 verticies.
-		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
-		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-		GLuint* shaderProgram;													//ShaderProgram loaded once, shared between all sprites.
-		GLuint* textures[TEXTURE_COUNT];										//Holds the textures for all possible sprites in the game.
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
 		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
+		Texture index;															//Tell the sprite what texture it's using.
 
-        //
-		// char* loadTextureFromFile(char* path, int no)
-		// {
-        //
-		// 	glGenTextures(2, textures);
-        //
-		// 	int width, height;
-		// 	unsigned char* image;
-		// 	float x, y, widthT, heightT;
-        //
-		// 	glActiveTexture(GL_TEXTURE0 + no);
-		// 	glBindTexture(GL_TEXTURE_2D, textures[0]);
-		// 	image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_AUTO);
-		// 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-		// 	SOIL_free_image_data(image);
-        //
-        //
-		// 	glUniform1i(glGetUniformLocation(shaderProgram, "texOne"), 0);
-        //
-		// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		// 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// }
+
+		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
+		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
+
 
 		// Gets the index of a frame and returns that frames coordinates on the spritesheet.
 		// Function assumes that the first frame on sheet has index 0.
 		// Returns a pointer to a float array with u1, v1, u2, v2.
-		float* returnUVCoordsFromFrameNumber (int frameNumber, int uDivisions, int vDivisions)
+		glm::vec4 returnUVCoordsFromFrameNumber (int frameNumber, int uDivisions, int vDivisions)
 		{
 			float uD = uDivisions;                                      // Saves as float for division
 			float vD = vDivisions;                                      // calculation.
@@ -76,40 +51,24 @@ class Sprite
 			float vCoord2 = (std::ceil((frameNumber+1)/uD))/vD;         // Divide by uD to not care about
 			float vCoord1 = vCoord2 - vSize;                            // Column nr.
 
-			float coords[4] = {uCoord1, vCoord1, uCoord2, vCoord2};
-			float *p = new float[4];
-			p = coords;
-			return (p);
+			return {uCoord1, vCoord1, uCoord2, vCoord2};
 		}
 
-		//Setting up attributes for shaderProgram:
-		void loadSharderAttributes()
-		{
-			GLint posAttrib = glGetAttribLocation(*shaderProgram, "position");
-			glEnableVertexAttribArray(posAttrib);
-			glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
 
-			GLint colAttrib = glGetAttribLocation(*shaderProgram, "color");
-			glEnableVertexAttribArray(colAttrib);
-			glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
-
-			GLint texAttrib = glGetAttribLocation(*shaderProgram, "texcoord");
-			glEnableVertexAttribArray(texAttrib);
-			glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
-		}
 
 	public:
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, glm::vec2 sheetPos, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
-			LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
+			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
 
 			pos = worldPos;
 			size = spriteSize;
+			index = textureIndex;
 
-																		//UV is vec4(startU, startV, endU, endV).
-			glBindVertexArray(vao);
-			glGenVertexArrays(1, &vao);
-			glBindVertexArray(vao);
+			GLuint vbo;																//Vertex buffer object for the 4 vertecies.
+			GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
+
+
 			glGenBuffers(1, &vbo);
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
@@ -118,94 +77,79 @@ class Sprite
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
 
-			if(firstSprite)														//If first sprite to be made:
-			{
-				LOG_DEBUG("Creating shaderProgram.");
-				shaderProgram = new GLuint;
-				*shaderProgram = create_program("vertex.vert", "fragment.frag");
 
-				loadSharderAttributes();
-				loadAllTexturesFromFile();
-			}
+            //
+            //
+			// LOG_DEBUG("Alpha");
+			// GLint posAttrib = glGetAttribLocation(resourceManager.shaderProgram, "position");
+			// glEnableVertexAttribArray(posAttrib);
+			// glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), 0);
+            //
+			// LOG_DEBUG("Bravo");
+			// GLint colAttrib = glGetAttribLocation(resourceManager.shaderProgram, "color");
+			// glEnableVertexAttribArray(colAttrib);
+			// glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(2 * sizeof(GLfloat)));
+            //
+			// LOG_DEBUG("Charlie");
+			// GLint texAttrib = glGetAttribLocation(resourceManager.shaderProgram, "texcoord");
+			// glEnableVertexAttribArray(texAttrib);
+			// glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
+			// LOG_DEBUG("Delta");
 
-
-
-
-			firstSprite = false;												//First sprite has been made. The rest will not load resources.
 		}
 
-		~Sprite()
+		void setPosition(glm::vec2 pos_)
 		{
-			//Delete shader program.
-		}
-
-
-		void loadAllTexturesFromFile()
-		{
-			LOG_DEBUG("Loading textures from files.");
-
-			for (int i = 0; i < TEXTURE_COUNT; i++)
-			{
-				textures[0] = new GLuint;
-			}
-			glGenTextures(1, *textures);
-
-			int width, height;
-			unsigned char* image;
-			float x, y, widthT, heightT;
-
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, *textures[0]);
-			image = SOIL_load_image("./assets/test.png", &width, &height, 0, SOIL_LOAD_AUTO);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-			SOIL_free_image_data(image);
-
-
-			glUniform1i(glGetUniformLocation(*shaderProgram, "texOne"), 0);
-
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			pos = pos_;
 		}
 
 		void draw()
 		{
 			// Use a Vertex Array Object
-			glBindVertexArray(vao);
-			glActiveTexture(GL_TEXTURE1);
+			//glBindVertexArray(vao);
+			//glActiveTexture(GL_TEXTURE0 +1);
+			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(index));
 
 
-			float* UV = returnUVCoordsFromFrameNumber(0, 1, 1);
+
+
+		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
+
+			LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+
 
 			GLfloat vertices[] = {
+				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top
+				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV[2], 	UV[1], 	// Right 	Top
+				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV[0], 	UV[3],	// Left 	Bottom
+				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV[2], 	UV[3] 	// Right 	Bottom
+			};//X 				Y 				R 		G 		B		U 		V
 
-				0.5f,	1.0f,		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[1], 	// Left 	Top
-				1.0f, 	1.0f,		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[1], 	// Right 	Top
-				0.5f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[0], 	UV[3],	// Left 	Bottom
-				1.0f, 	0.5f, 		1.0f,	1.0f, 	1.0f,		UV[2], 	UV[3] 	// Right 	Bottom
-			};//X 		Y 			R 		G 		B			U 		V
-
-
-			glBindVertexArray(vao);
+			LOG_DEBUG("Echo");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+			LOG_DEBUG("Foxtrot");
 
 
 			GLuint elements[] = {
 				0, 1, 3,
 				3, 2, 0
-
 			};
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
+			LOG_DEBUG("Golf");
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
+			LOG_DEBUG("Infra");
 
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
+			// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+			// glBindBuffer(GL_ARRAY_BUFFER, 0);
+			//glBindVertexArray(0);
+			LOG_DEBUG("Jimmie");
+
+
 		}
 
 };

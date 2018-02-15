@@ -28,6 +28,8 @@ class GameLoop
 	  GLFWwindow* window;
 
 	  Sprite* sprite;		//test sprite.
+	  Sprite* sprite2;		//test sprite.
+
 
     public:
         GameLoop()
@@ -98,10 +100,17 @@ class GameLoop
 
 
 			sprite = new Sprite(
-				glm::vec2(0,	0),												//Position.
-				glm::vec2(0.5f,	0.5f),											//Size.
-				glm::vec2(1,	1),												//Sprite sheetPosition.
+				glm::vec2(-1,	1),										//Position.
+				glm::vec2(1,		1),										//Size.
+				glm::vec2(1,		1),											//Sprite sheetPosition.
+				test);
+
+			sprite2 = new Sprite(
+				glm::vec2(-0.6f,	0.6f),										//Position.
+				glm::vec2(1,		1),										//Size.
+				glm::vec2(1,		1),											//Sprite sheetPosition.
 				empty);
+
 
 
 
@@ -123,7 +132,12 @@ class GameLoop
 		    }
 
 			//dynamic code//
+			//sprite->setPosition({-1, 1});
+
 			sprite-> draw();
+			//sprite->setPosition({0, 0});
+			//sprite->draw();
+			sprite2-> draw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
