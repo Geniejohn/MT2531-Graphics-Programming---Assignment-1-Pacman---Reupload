@@ -38,7 +38,7 @@ enum Direction
 };
 const int STARTING_DIRECTION = right;			//Below 'Direction' definition.
 
-const int TEXTURE_COUNT = 2;					//The total number of textures that will be loaded.
+const int TEXTURE_COUNT = 3;					//The total number of textures that will be loaded.
 //Can not be const:
 char FILES[3][50] =								//List of paths to all the files used by the game.
 {												//should be automated to read from folder instead in the future.
