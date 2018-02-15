@@ -2,7 +2,9 @@
 #include "constants.h"
 #include "glm/glm/glm.hpp"
 
-class Pacman : MovableCharacter
+extern Level level;
+
+class Pacman : public MovableCharacter
 {
 	private:
 		int lives;
@@ -10,7 +12,7 @@ class Pacman : MovableCharacter
 	public:
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Pacman(int Id) : public MovableCharacter(Id, pacman, PACMAN_SPEED)
+		Pacman(int Id) : MovableCharacter(Id, pacman, PACMAN_SPEED*level.retTSize())
 		{
 			lives = STARTING_LIVES;
 		}

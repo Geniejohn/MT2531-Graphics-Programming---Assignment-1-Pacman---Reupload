@@ -8,14 +8,14 @@
 extern Level level;
 extern Pacman pacman;
 
-class Ghost : MovableCharacter
+class Ghost : public MovableCharacter
 {
 	private:
 
 	public:
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Ghost(int Id) : public MovableCharacter(Id, ghost, GHOST_SPEED)
+		Ghost(int Id) : MovableCharacter(Id, ghost, GHOST_SPEED*level.retTSize())
 		{
 			lives = STARTING_LIVES;
 		}
