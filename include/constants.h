@@ -24,6 +24,8 @@ enum Direction
 	still, left, up, right, down,
 };
 
+const int STARTING_DIRECTION = right;							//Below 'Direction' definition.
+
 //Can not be const.
 char FILES[2][50] =								//List of paths to all the files used by the game.
 {												//should be automated to read from folder instead in the future.
