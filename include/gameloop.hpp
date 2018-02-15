@@ -15,6 +15,7 @@
 #include "glm/glm/gtc/type_ptr.hpp"
 
 #include "sprite.hpp"
+//#include "spriteAnimated.hpp"
 #include "constants.h"
 #include "level.hpp"
 
@@ -24,61 +25,43 @@ class GameLoop
 {
     private:
       bool running;			//True as long as game is running.
-      int nbFrames;
-      double lastTime;
 
 
-	  Sprite* sprite;		//test sprite.
-	  Sprite* sprite2;
+	  //SpriteAnimated* animation;
 
     public:
         GameLoop()
 		{
-		    running = true;
-		    nbFrames = 0;
-		    lastTime = glfwGetTime();
-
-
+			running = true;
 		}
+
 
 		~GameLoop()
 		{
-			delete sprite;
+			
 		}
 
 
 		void makeSprites()
 		{
 
-			sprite = new Sprite(
-				glm::vec2(-0.5f,	0.5f),										//Position.
-				glm::vec2(1,		1),											//Size.
-				empty);
-
-			sprite2 = new Sprite(
-				glm::vec2(-1,		0),										//Position.
-				glm::vec2(1,		1),											//Size.
-				test);
+		// 	animation = new SpriteAnimated(
+		// 		glm::vec2(0,		0),										//Position.
+		// 		glm::vec2(1,		1),											//Size.
+		// 		pacmanAnimation);
+		//
 		}
 
         void run()
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		    																	// Measure speed:
-		    double currentTime = glfwGetTime();
-		    if (currentTime - lastTime >= 1.0) { 								// If last prinf() was more than 1sec ago
-		                                            							// printf and reset
-		        LOG_DEBUG("%f ms/frame\n", 1000.0 / double(nbFrames));
-		        nbFrames = 0;
-		        lastTime += 1.0;
-		    }
-
+			//s	animation-> update(right);
 			LOG_DEBUG("Will now try to draw level.");
 			level.draw();
 			LOG_DEBUG("Finished drawing level.");
-			//sprite-> draw();
-			//sprite2-> draw();
+
+			//animation-> draw();
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();

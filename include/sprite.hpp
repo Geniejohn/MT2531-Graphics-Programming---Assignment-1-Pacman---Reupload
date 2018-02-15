@@ -22,18 +22,20 @@ extern ResourceManager resourceManager;
 // extern GLuint vao;																//Vertex array with the 4 verticies.
 
 
-class Sprite
+class Sprite																	//Is base-class for spriteAnimation.
 {
 	private:
+		Texture index;															//Tell the sprite what texture it's using.
+	protected:
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
 		glm::vec2 origin;
 		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
-		Texture index;															//Tell the sprite what texture it's using.
 
 
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
+
 
 
 		// Gets the index of a frame and returns that frames coordinates on the spritesheet.
@@ -55,9 +57,8 @@ class Sprite
 			glm::vec4 UVCoords = glm::vec4(uCoord1, vCoord1, uCoord2, vCoord2);
 			return UVCoords;
 		}
-
-
 	public:
+
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
@@ -68,9 +69,6 @@ class Sprite
 			index = textureIndex;
 			origin = glm::vec2(size.x / 2, size.y / 2);
 
-			GLuint vbo;																//Vertex buffer object for the 4 vertecies.
-			//GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-			LOG_DEBUG("1");
 
 			glGenBuffers(1, &vbo);
 			LOG_DEBUG("2");
@@ -141,6 +139,8 @@ class Sprite
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
 			// LOG_DEBUG("Golf");
+
+			resourceManager.loadShaderAttributes();
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
 			// LOG_DEBUG("Infra");
