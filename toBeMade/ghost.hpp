@@ -56,20 +56,12 @@ class Ghost : MovableCharacter
 			//Next tile in that direction is not traversable:
 			while (level.isTileEmpty(level.findNextTile(MovableCharacter::tileID, choice)) == false)
 			{
-				choice = cycleDir(choice);						//Cycle choice direction.
+				choice = MovableCharacter::cycleDir(choice, 1);	//Cycle choice direction clockwise.
 				LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
 			}
 
 			//Choice should now lead to traversable tile.
 			return choice;
-		}
-
-
-		//Takes a direction and returns the next one in the cycle,
-		//left->up->right->down-left->up etc:
-		int cycleDir(int d)
-		{
-			return((d%4)+1);
 		}
 
 
@@ -83,9 +75,12 @@ class Ghost : MovableCharacter
 
 		void update()
 		{
-			if(MovableCharacter::dir == still)					//Come to a stop.
+			//Come to a stop or is able to make 90 degree turn:
+			if(MovableCharacter::dir == still || MovableCharacter::canTurn() == true)
 			{
 				MovableCharacter::desiredDir = makeChoice();	//Change direction.
 			}
+
+			MovableCharacter::update();
 		}
 };
