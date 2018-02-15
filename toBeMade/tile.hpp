@@ -1,5 +1,6 @@
 #include "sprite.hpp"
 #include "constants.h"
+#include "glm/glm/glm.hpp"
 
 //Each space in the map except for the walls are tiles:
 class Tile
@@ -35,13 +36,11 @@ class Tile
 		}
 
 
-		int* retPos()
+		glm::vec2 retPos()
 		{
-		 	int* pos = new int[2];
-			pos = {x, y};
-			return pos;
+			return glm::vec2(x, y);
 		}
 
 
-		
+
 };
