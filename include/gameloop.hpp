@@ -15,6 +15,7 @@
 #include "glm/glm/gtc/type_ptr.hpp"
 
 #include "sprite.hpp"
+#include "spriteAnimated.hpp"
 #include "constants.h"
 
 
@@ -22,9 +23,6 @@ class GameLoop
 {
     private:
       bool running;			//True as long as game is running.
-      int nbFrames;
-      double lastTime;
-
 
 	  Sprite* sprite;		//test sprite.
 	  Sprite* sprite2;
@@ -32,11 +30,7 @@ class GameLoop
     public:
         GameLoop()
 		{
-		    running = true;
-		    nbFrames = 0;
-		    lastTime = glfwGetTime();
-
-
+			running = true;
 		}
 
 		~GameLoop()
@@ -62,16 +56,6 @@ class GameLoop
         void run()
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		    																	// Measure speed:
-		    double currentTime = glfwGetTime();
-		    if (currentTime - lastTime >= 1.0) { 								// If last prinf() was more than 1sec ago
-		                                            							// printf and reset
-		        LOG_DEBUG("%f ms/frame\n", 1000.0 / double(nbFrames));
-		        nbFrames = 0;
-		        lastTime += 1.0;
-		    }
-
 
 			sprite-> draw();
 			sprite2-> draw();

@@ -7,6 +7,7 @@
 
 ResourceManager resourceManager;
 GameLoop gameLoop;
+float dt;																		//DeltaTime: the time it took to complete the last frame.
 
 int main(void)
 {
@@ -21,8 +22,24 @@ int main(void)
 	resourceManager.loadShaderAttributes();										//VERY IMPORTANT, NEEDS TO BE THE LAST THING IN SETUP.
 
 
+	int nbFrames = 0;
+	double lastTime = glfwGetTime();
+
+
+
     do
     {
+																				//Measure speed:
+		double currentTime = glfwGetTime();
+		if (currentTime - lastTime >= 1.0)  									//If last prinf() was more than 1sec ago
+		{
+			dt =  1000.0 / float(nbFrames);										//Printf and reset
+			LOG_DEBUG("dt: %f",dt);
+			nbFrames = 0;
+			lastTime += 1.0;
+		}
+
+
         gameLoop.run();
 
     }while(gameLoop.getRunning());
