@@ -85,12 +85,13 @@ file(COPY  ${PROJECT_SOURCE_DIR}/dll/glew32.dll DESTINATION ${PROJECT_BINARY_DIR
 endif(WINDOWS)
 
 if(APPLE)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${GLEW_INCLUDE_DIRS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${GLEW_INCLUDE_DIRS} -std=c++14 -g -fsanitize=address -fno-omit-frame-pointer -Wall -Wextra")
 endif(APPLE)
 
 if(LINUX)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -Og -fsanitize=address -fno-omit-frame-pointer -Wall -Wextra")
 endif(LINUX)
+
 
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_DIRECTORIES)
