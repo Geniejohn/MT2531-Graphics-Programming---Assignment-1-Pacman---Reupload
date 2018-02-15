@@ -57,7 +57,7 @@ class Sprite
 
 
 	public:
-		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, glm::vec2 sheetPos, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
+		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
 

@@ -45,6 +45,15 @@ class ResourceManager
 
 		}
 
+	public:
+
+		GLuint shaderProgram;													//ShaderProgram loaded once, shared between all sprites.
+
+		ResourceManager()
+		{
+
+		}
+
 		//Setting up attributes for shaderProgram:
 		void loadShaderAttributes()
 		{
@@ -61,20 +70,11 @@ class ResourceManager
 			glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(GLfloat), (void*)(5 * sizeof(GLfloat)));
 		}
 
-	public:
-
-		GLuint shaderProgram;													//ShaderProgram loaded once, shared between all sprites.
-
-		ResourceManager()
-		{
-
-		}
-
 		int startup()
 		{
 			shaderProgram = create_program("vertex.vert", "fragment.frag");
-			loadShaderAttributes();
 
+		
 			glGenTextures(TEXTURE_COUNT, textures);
 
 			for(int i = 0; i < TEXTURE_COUNT; i++)

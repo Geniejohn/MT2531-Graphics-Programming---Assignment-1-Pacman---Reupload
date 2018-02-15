@@ -28,7 +28,6 @@ class GameLoop
 	  GLFWwindow* window;
 
 	  Sprite* sprite;		//test sprite.
-	  Sprite* sprite2;		//test sprite.
 
 
     public:
@@ -99,24 +98,18 @@ class GameLoop
 			glClearColor(1,1,1,1);
 
 
-			sprite = new Sprite(
-				glm::vec2(-1,	1),										//Position.
-				glm::vec2(1,		1),										//Size.
-				glm::vec2(1,		1),											//Sprite sheetPosition.
-				test);
-
-			sprite2 = new Sprite(
-				glm::vec2(-0.6f,	0.6f),										//Position.
-				glm::vec2(1,		1),										//Size.
-				glm::vec2(1,		1),											//Sprite sheetPosition.
-				empty);
-
-
-
-
 			return 0;															//All went well.
 		}
 
+		void makeSprites()
+		{
+
+				sprite = new Sprite(
+					glm::vec2(-0.5f,	0.5f),										//Position.
+					glm::vec2(1,		1),											//Size.
+					empty);
+
+		}
 
         void run()
 		{
@@ -137,7 +130,6 @@ class GameLoop
 			sprite-> draw();
 			//sprite->setPosition({0, 0});
 			//sprite->draw();
-			sprite2-> draw();
 
 			glfwSwapBuffers(window);
 			glfwPollEvents();
