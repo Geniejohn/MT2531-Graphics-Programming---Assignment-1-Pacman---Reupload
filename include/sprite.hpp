@@ -52,16 +52,16 @@ class Sprite
 			float vCoord2 = (std::ceil((frameNumber+1)/uD))/vD;         // Divide by uD to not care about
 			float vCoord1 = vCoord2 - vSize;                            // Column nr.
 
-			return {uCoord1, vCoord1, uCoord2, vCoord2};
+			glm::vec4 UVCoords = glm::vec4(uCoord1, vCoord1, uCoord2, vCoord2);
+			return UVCoords;
 		}
-
 
 
 	public:
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
-			LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
+			//LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
 
 			pos = worldPos;
 			size = spriteSize;
@@ -108,8 +108,9 @@ class Sprite
 
 		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
 
-			// LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
 
+			// LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
+			LOG_DEBUG("UV: %f, %f, %f, %f", UV[0], UV[1], UV[2], UV[3]);
 
 			GLfloat vertices[] = {
 				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top
