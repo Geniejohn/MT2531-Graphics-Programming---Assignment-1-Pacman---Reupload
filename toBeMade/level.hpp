@@ -261,4 +261,10 @@ class Level
 			return floatPtr;
 		}
 
+
+		//Changes a tiles type.
+		void setTileType(int Id, int t)
+		{
+			tilePtrs[Id].setType(t);
+		}
 };

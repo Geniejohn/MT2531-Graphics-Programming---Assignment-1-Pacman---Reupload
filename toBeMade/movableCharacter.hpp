@@ -7,6 +7,7 @@
 
 extern Level level;
 extern float dt;												//DeltaTime.
+extern GameUI gameUI;
 
 //Base-class for all movable characters:
 class MovableCharacter
@@ -184,9 +185,21 @@ class MovableCharacter
 			move();												//Change position and update sprite.
 
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
-			if(abs(tPos[0] - pos[0]) < level.retTolerance()[0] && abs(tPos[1] - pos[1]) < level.retTolerance()[1])
+			if(abs(tPos[0] - pos[0]) < level.retTolerance()[0] && abs(tPos[1] - pos[1]) < level.retTolerance()[1] && inTileCenter == false)
 			{
 				inTileCenter = true;
+																//Pacman enters tile with item to pick up:
+				if(type == pacman && level.retTileType(tileID) != empty)
+				{
+					switch (level.retTileType(tileID))			//Checks for item-type.
+					{
+						case pellet:							//If pellet.
+							gameUI.addScore(SCORE_PELLET);		//Add pellet-score to score total.
+						default:
+							break;
+					}
+					level.setTileType(tileID, empty);			//Empty that tile as Pacman has just picked up item.
+				}
 			}
 			else												//Not within tolerance-values.
 			{
