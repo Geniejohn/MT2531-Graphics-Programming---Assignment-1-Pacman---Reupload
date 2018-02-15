@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "MovableCharacter.hpp"
 
-//extern Pacman
+extern Pacman pacman;
 
 //Each space in the map except for the walls are tiles:
 class InputManager

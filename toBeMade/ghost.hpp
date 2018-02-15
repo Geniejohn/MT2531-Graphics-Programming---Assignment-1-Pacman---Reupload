@@ -5,8 +5,8 @@
 #include "cmath"												// abs()
 #include "logger.h"
 
-//extern level;
-//extern pacman;
+extern Level level;
+extern Pacman pacman;
 
 class Ghost : MovableCharacter
 {
@@ -30,7 +30,7 @@ class Ghost : MovableCharacter
 		{
 			int choice = 1;										//Default.
 			glm::vec2 diff = findDirDiff();						//Try moving towards Pacman first.
-			if((abs(diff[0])-abs(diff[1])) < 0.0f)				//Diff on x-axis is smallets.
+			if((abs(diff[0])-abs(diff[1])) > 0.0f)				//Diff on y-axis is smallets.
 			{
 				if(diff[0] < 0.0f)								//Pacman to the left.
 				{
@@ -41,7 +41,7 @@ class Ghost : MovableCharacter
 					choice = right;
 				}
 			}
-			else												//Closest to Pacman on y-axis.
+			else												//Closest to Pacman on x-axis.
 			{
 				if(diff[1] < 0.0f)								//Pacman below.
 				{

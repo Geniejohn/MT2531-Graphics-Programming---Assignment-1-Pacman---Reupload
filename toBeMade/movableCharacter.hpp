@@ -5,7 +5,7 @@
 #include "spriteAnimated.hpp"
 #include "cmath"												// abs()
 
-//extern level;
+extern Level level;
 
 //Base-class for all movable characters:
 class MovableCharacter
@@ -116,7 +116,7 @@ class MovableCharacter
 				break;
 			}
 
-			spriteAnimated.update(pos, dir);	//Call update to run animation.
+			spriteAnimated.update(pos, dir);					//Call update to run animation.
 		}
 
 
