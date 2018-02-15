@@ -121,6 +121,45 @@ class MovableCharacter
 		}
 
 
+		//Takes a direction and rotation and returns the next one in the cycle.
+		//Either: left->up->right->down-left->up  etc.
+		//Or:	  up->left->down->right->up->left etc.
+		int cycleDir(int d, int rot)
+		{
+			if(rot > 0) 										//cycle clockwise.
+			{
+				return((d%4)+1);
+			}
+			else												//Cycle counter-clockwise.
+			{
+				if(d-1 < 1)										//Started at 1/left.
+				{
+					return down;								//Skip 0/still, skip to down/4.
+				}
+				else											//Started at up, right or down.
+				{
+					return (d-1);
+				}
+			}
+		}
+
+
+		//Checks if player can change direction orthogonal to current direciton(i.e. 90 degree turn):
+		bool canTurn()
+		{
+			//Tile to the relative right or relative left is traversable:
+			if(	 level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir,  1))) == true
+			  || level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir, -1))) == true)
+			{
+				return true;
+			}
+			else												//Cannot make 90 degree turn.
+			{
+				return false;
+			}
+		}
+
+
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{

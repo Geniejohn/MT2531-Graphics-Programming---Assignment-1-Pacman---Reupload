@@ -24,4 +24,12 @@ class Pacman : MovableCharacter
 		{
 			return MovableCharacter::tPos;
 		}
+
+
+		void update()
+		{
+			MovableCharacter::update();
+		}
+
+
 };
