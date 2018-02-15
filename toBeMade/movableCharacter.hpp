@@ -5,14 +5,13 @@
 #include "spriteAnimated.hpp"
 #include "cmath"												// abs()
 
-//extern level;
+extern Level level;
 
 //Base-class for all movable characters:
 class MovableCharacter
 {
 	private:
-		int xPos;												//X coordinate.
-		int yPos;												//Y coordinate.
+		glm::vec2 pos;
 		int type;												//Enum for character-type.
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
@@ -27,12 +26,12 @@ class MovableCharacter
 		//Constructor:
 		MovableCharacter(int Id, int typ)
 		{
-			spriteAnimated = new SpriteAnimated(typ);			//Creates new sprite of wanted type.
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
-			xPos = level.getTilePos()[0];
-			yPos = level.getTilePos()[1];
 			type = typ;
+			pos = level.getTilePos();
+																//Creates new sprite of wanted type:
+			spriteAnimated = new SpriteAnimated(pos, level.retTSize(), typ);
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
@@ -54,7 +53,7 @@ class MovableCharacter
 
 		glm::vec2 retPos()
 		{
-			return glm::vec2(xPos, yPos);
+			return pos;
 		}
 
 
@@ -98,16 +97,16 @@ class MovableCharacter
 		{
 			switch (dir)
 			{
-				//case left: xPos -= deltaTime*speed;
+				//case left: pos[0] -= deltaTime*speed;
 				//break;
 
-				//case up: yPos += deltaTime*speed;
+				//case up: pos[1] += deltaTime*speed;
 				//break;
 
-				//case right: xPos += deltaTime*speed;
+				//case right: pos[0] += deltaTime*speed;
 				//break;
 
-				//case down: xPos -= deltaTime*speed;
+				//case down: pos[1] -= deltaTime*speed;
 				//break;
 
 				//case still:										//Stays still.
@@ -117,7 +116,7 @@ class MovableCharacter
 				break;
 			}
 
-			spriteAnimated.update(glm::vec2(xPos, yPos), dir);	//Call update to run animation.
+			spriteAnimated.update(pos, dir);					//Call update to run animation.
 		}
 
 
@@ -169,9 +168,7 @@ class MovableCharacter
 			if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, desiredDir)) == true)
 			{
 				//Snaps to tile before changing direction:
-				xPos = tPos[0];
-				yPos = tPos[1];
-
+				pos = tPos;
 				changeDir();
 			}
 
@@ -184,7 +181,7 @@ class MovableCharacter
 			move();												//Change position and update sprite.
 
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
-			if(abs(tPos[0] - xPos) < level.retTolerance()[0] && abs(tPos[1] - yPos) < level.retTolerance()[1])
+			if(abs(tPos[0] - pos[0]) < level.retTolerance()[0] && abs(tPos[1] - pos[1]) < level.retTolerance()[1])
 			{
 				inTileCenter = true;
 			}

@@ -7,19 +7,20 @@ class Tile
 {
 	private:
 		int ID;
-		int x;										//X coordinate.
-		int y;										//Y coordinate.
-		int type;
+		glm::vec2 pos;
+		glm::vec2 size;
+		int type;									//Texture Enum.
 		Sprite* sprite;
 
 	public:
 		//Constructor:
-		Tile(int Id, int xPos, int yPos, int typ)
+		Tile(int Id, glm::vec2 p, glm::vec2 s, int typ)
 		{
-			x = xPos;
-			y = yPos;
+			ID = Id;
+			pos = p;
+			size = s;
 			type = typ;
-			sprite = new Sprite(typ);				//Creates new sprite of the wanted type.
+			sprite = new Sprite(pos, size, typ);				//Creates new sprite of the wanted type.
 		}
 
 
@@ -38,9 +39,15 @@ class Tile
 
 		glm::vec2 retPos()
 		{
-			return glm::vec2(x, y);
+			return pos;
 		}
 
 
+		//Called by level when pacman eats a pellet for example:
+		void setType(int t)
+		{
+			type = t;
+			sprite.setTexture(type);
+		}
 
 };
