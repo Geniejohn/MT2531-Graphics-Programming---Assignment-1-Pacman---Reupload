@@ -5,6 +5,7 @@
 #include "spriteAnimated.hpp"
 #include "cmath"												// abs()
 
+//extern level;
 
 //Base-class for all movable characters:
 class MovableCharacter
@@ -18,7 +19,7 @@ class MovableCharacter
 		int desiredDir;											//Desired movement-direction.
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
-		Level level;
+		glm::vec2 tPos;
 
 	public:
 		//Constructor:
@@ -32,6 +33,7 @@ class MovableCharacter
 			type = typ;
 			dir = 2;											//Right.
 			desiredDir = 2;										//Right.
+			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
 		}
 
 
@@ -64,7 +66,7 @@ class MovableCharacter
 		//Change the desire direction:
 		void changeDesiredDir(int desDir)
 		{
-			if(d < 0 || d > 3)									//'d' out of range.
+			if(desDir < 0 || desDir > 4)						//'d' out of range.
 			{
 				LOG_DEBUG("Desired direction-argument is out of range(0-3).");
 			}
@@ -83,9 +85,9 @@ class MovableCharacter
 
 
 		//Update desired direction:
-		void updateDesiredDir(int d)
+		void updateDesiredDir(int desDir)
 		{
-			defesiredDir = desDir;;
+			desiredDir = desDir;;
 			//Do more?
 		}
 
@@ -120,18 +122,22 @@ class MovableCharacter
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{
-			glm::vec2 tPos = level.getTilePos(tileID);				//Finds position of current tile.
+			tPos = level.getTilePos(tileID);					//Updates position of current tile.
 
 			//Can change direction, traversable tile in desired direction:
-			if(inTileCenter == true && level.findNextTile(tileID, desiredDir))
+			if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, desiredDir)) == true)
 			{
-
-
 				//Snaps to tile before changing direction:
 				xPos = tPos[0];
 				yPos = tPos[1];
 
 				changeDir();
+			}
+
+			//Character in center of tile and cannot continue moving in same direction:
+			if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
+			{
+				dir = still;
 			}
 
 			move();												//Change position and update sprite.
