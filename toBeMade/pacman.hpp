@@ -9,7 +9,8 @@ class Pacman : MovableCharacter
 
 	public:
 		//MovableCharacter(int Id, int x, int y)
-		Pacman(int Id) : public MovableCharacter(Id)			//Call base-class constructor:
+		//Call base-class constructor:
+		Pacman(int Id) : public MovableCharacter(Id, pacman, PACMAN_SPEED)
 		{
 			lives = STARTING_LIVES;
 		}

@@ -14,7 +14,8 @@ class Ghost : MovableCharacter
 
 	public:
 		//MovableCharacter(int Id, int x, int y)
-		Ghost(int Id) : public MovableCharacter(Id)				//Call base-class constructor:
+		//Call base-class constructor:
+		Ghost(int Id) : public MovableCharacter(Id, ghost, GHOST_SPEED)
 		{
 			lives = STARTING_LIVES;
 		}

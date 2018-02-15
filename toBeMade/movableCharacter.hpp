@@ -6,6 +6,7 @@
 #include "cmath"												// abs()
 
 extern Level level;
+extern float dt;												//DeltaTime.
 
 //Base-class for all movable characters:
 class MovableCharacter
@@ -13,6 +14,7 @@ class MovableCharacter
 	private:
 		glm::vec2 pos;
 		int type;												//Enum for character-type.
+		float speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
 
@@ -24,11 +26,12 @@ class MovableCharacter
 
 	public:
 		//Constructor:
-		MovableCharacter(int Id, int typ)
+		MovableCharacter(int Id, int typ, float s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
 			type = typ;
+			speed = s;
 			pos = level.getTilePos();
 																//Creates new sprite of wanted type:
 			spriteAnimated = new SpriteAnimated(pos, level.retTSize(), typ);
@@ -97,20 +100,20 @@ class MovableCharacter
 		{
 			switch (dir)
 			{
-				//case left: pos[0] -= deltaTime*speed;
-				//break;
+				case left: pos[0] -= dt*speed;
+				break;
 
-				//case up: pos[1] += deltaTime*speed;
-				//break;
+				case up: pos[1] += dt*speed;
+				break;
 
-				//case right: pos[0] += deltaTime*speed;
-				//break;
+				case right: pos[0] += dt*speed;
+				break;
 
-				//case down: pos[1] -= deltaTime*speed;
-				//break;
+				case down: pos[1] -= dt*speed;
+				break;
 
-				//case still:										//Stays still.
-				//break;
+				case still:										//Stays still.
+				break;
 
 				default: LOG_DEBUG("Direction out of range.");
 				break;
