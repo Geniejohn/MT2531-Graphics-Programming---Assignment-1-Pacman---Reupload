@@ -12,13 +12,9 @@ const float CENTER_TOLERANCE = 0.15f;			//Tolereance for character snap to cente
 const float GHOST_SPEED = 2.8f;
 const float PACMAN_SPEED = 2.5f;
 
-const float PACMAN_ANIMATION_SPEED = 2.5f;		//Frames / Sec.
-const float GHOST_ANIMATION_SPEED = 1.1f;		//Frames / Sec.
-
-
-enum Texture									//The different textrues a static sprite can have.
+enum Texture : int									//The different textrues a static sprite can have.
 {
-	test, pacSheet, ghostSheet, empty, pellet, upgrade,
+	test, pacSheet, ghostSheet, empty, pellet, upgrade, wall, 
 };
 
 enum Animation									//The different sprite sheet animations in the game.

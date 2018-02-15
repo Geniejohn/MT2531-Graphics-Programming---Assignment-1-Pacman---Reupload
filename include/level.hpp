@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>									//ifstream to load map.
 #include <string.h>
 #include <string>									//(to_string).
@@ -5,6 +7,7 @@
 #include "logger.h"
 #include "glm/glm/glm.hpp"
 #include "tile.hpp"
+#include <vector>
 
 // #ifdef _WIN32 // Windows 10 (Visual Studio)
 // #define skip
@@ -18,7 +21,7 @@
 class Level
 {
 	private:
-		string level;
+		std::string level;
 
 		//Distance from center which counts as center:
 		float cToleranceX;
@@ -28,13 +31,14 @@ class Level
 
 		int mapWidth;
 		int mapHeight;
-		int* tilePtrs;									//Pointer for tile-array.
+		int numberOfTiles;
+ 		std::vector<Tile> tiles;									//Pointer for tile-array.
 
 
 		//Returns the type of the tile with the given ID:
 		int retTileType(int ID)
 		{
-			return (tilePtrs[ID]->retType());			//Calls the Tile-objects returnType.
+			return  tiles[ID].retType();			//Calls the Tile-objects returnType.
 		}
 
 
@@ -69,60 +73,62 @@ class Level
 
 
 	public:
+
+		Level() = default;
+
+		Level& operator=(const Level& other) = default;
 		//Constructor:
 		//Sets its variables and reads level-file to create tiles for tile-pointer array:
 		Level(int lvl)
 		{
-			level = "level" + to_string(lvl);		//Dynamic string to load levels dynamically.
+			level = "./levels/level" + std::to_string(lvl);		//Dynamic string to load levels dynamically.
 
-			ifstream reader("../levels/" + level);	//Creates ifstream to read level-file.
+			std::ifstream reader(level);						//Creates ifstream to read level-file.
 
-			if(reader)								//Found the file.
+			if(reader)											//Found the file.
 			{
 				reader >> mapWidth;
 				reader >> mapHeight;
-				reader.ignore();					//Ignore newline.
+				reader.ignore();								//Ignore newline.
 
-				tilePtrs = new int[mapWidth*mapHeight];
+				numberOfTiles = mapWidth*mapHeight;
 
-				int k = mapWidth*mapHeight;
+				LOG_DEBUG("k: %d'", numberOfTiles);
+
+
 				int tempID;
 				int horizIncrement = HORIZONTAL_GAMESPACE/mapWidth;
 				int vertiIncrement = VERTICAL_GAMESPACE/mapHeight;
-				tSize = {2*HORIZONTAL_GAMESPACE)/mapWidth, 2*VERTICAL_GAMESPACE)/mapHeight}
-				int xPos, yPos;
+				tSize = glm::vec2((2*HORIZONTAL_GAMESPACE)/float(mapWidth), (2*VERTICAL_GAMESPACE)/float(mapHeight));
+				float xPos, yPos;
 
-				for (int i = 0; i < k; i++) 		//Reads level-file and creates tiles.
+				for (int i = 0; i < numberOfTiles; i++) 		//Reads level-file and creates tiles.
 				{
+					tempID = 0;
 					reader >> tempID;
 					if(tempID != 1)					//Not wall.
 					{
-													//'-1.0f' is left border, then add padding.
-													//'HORIZONTAL_GAMESPACE' determines padding,
-													//add 'horizIncrement' per previous element in row.
+													//'1-HORIZONTAL_GAMESPACE = Padding.
 													//'i%mapWidth' gives number for that row.
 													//Formula: Borderpos + padding + increment.
-						xPos = (-1+(2-HORIZONTAL_GAMESPACE*2))+((i%mapWidth)*horizIncrement);
-													//'1.0f' is upper border, then add padding.
-													//'VERTICAL_GAMESPACE' determines padding.
-													//add 'vertiIncrement' per previous element in column.
-													//'i/mapHeight' gives number for that column.
-													//Formula: Borderpos - padding - increment.
-						yPos = (1-(2-VERTICAL_GAMESPACE*2))-((i/mapHeight)*vertiIncrement);
+					// -1 + ( /2)
+						xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
+						yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapHeight)*tSize.y));
 
 													//Add new tile and make index 'i' in array point to it.
-						tilePtrs[i] = new Tile(i, glm::vec2(xPos, yPos), tSize, tempID);
+					 tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
 					}
 					else							//Is wall.
 					{
-						tilePtrs[i] = NULL;			//Set pointer for wall to NULL.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, wall));			//Set pointer for wall to NULL.
 					}
 				}
+				LOG_DEBUG("Loop has ended");
 				reader.close();						//Close ifstream.
 			}
 			else
 			{
-				LOG_DEBUG("Didn't find the specified level-file.");
+				LOG_ERROR("Didn't find the specified level-file.");
 			}
 
 			//Finished loading variables from file, set tolerance-variables.
@@ -134,8 +140,8 @@ class Level
 			//2*HORIZONTAL_GAMESPACE*(1/mapWidth) = size of a single tile.
 			//Translated: CENTER_TOLERANCE * (Size of tile).
 			//E.G. Given CENTER_TOLERANCE of 0.5f, cToleranceX will be 50% of a single tile's x-dimention.
-			cToleranceX = CENTER_TOLERANCE*2*HORIZONTAL_GAMESPACE*(1/mapWidth);	//Fraction of tile-size.
-			cToleranceY = CENTER_TOLERANCE*2*VERTICAL_GAMESPACE*(1/mapHeight);	//Fraction of tile-size.
+			cToleranceX = CENTER_TOLERANCE*2*HORIZONTAL_GAMESPACE*(1/float(mapWidth));	//Fraction of tile-size.
+			cToleranceY = CENTER_TOLERANCE*2*VERTICAL_GAMESPACE*(1/float(mapHeight));	//Fraction of tile-size.
 
 		}
 
@@ -143,7 +149,7 @@ class Level
 		//Deconstructor:
 		~Level()
 		{
-			delete tilePtrs;
+
 		}
 
 		//Return Width:
@@ -156,7 +162,7 @@ class Level
 		//Return Height:
 		int retH()
 		{
-			return mapHeigth;
+			return mapHeight;
 		}
 
 
@@ -176,7 +182,7 @@ class Level
 			}
 			else									//ID is in range.
 			{
-				return (tilePtrs[ID]->retPos());	//Fetch position from wanted tile.
+				return  tiles[ID].retPos();	//Fetch position from wanted tile.
 			}
 		}
 
@@ -243,7 +249,7 @@ class Level
 			}
 			else										//ID is within range.
 			{
-				if(tiles[ID] != NULL)					//Tile with that ID exists.
+				if(tiles[ID].retTexture() != wall)					//Tile with that ID exists.
 				{
 					return 1;
 				}
@@ -255,16 +261,28 @@ class Level
 		}
 
 
-		float* retTolerance()
+		//Returns tolereanc-value of center.
+		glm::vec2 retTolerance()
 		{
-			float* floatPtr = new float[cToleranceX, cToleranceY];
-			return floatPtr;
+			return glm::vec2(cToleranceX, cToleranceY);
 		}
 
 
 		//Changes a tiles type.
-		void setTileType(int Id, int t)
+		void setTileType(int Id, Texture t)
 		{
-			tilePtrs[Id].setType(t);
+		 tiles[Id].setType(t);
+		}
+
+		void draw()
+		{
+			for (int i = 0; i < numberOfTiles; i++)
+			{
+				if(tiles[i].retTexture() != wall)						//Not wall.
+				{
+					LOG_DEBUG("Calling tile %d's draw-function", i);
+				 tiles[i].draw();
+				}
+			}
 		}
 };

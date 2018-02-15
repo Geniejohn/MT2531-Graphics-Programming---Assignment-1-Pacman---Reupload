@@ -17,15 +17,15 @@
 #include "sprite.hpp"
 //#include "spriteAnimated.hpp"
 #include "constants.h"
+#include "level.hpp"
 
+extern Level level;
 
 class GameLoop
 {
     private:
       bool running;			//True as long as game is running.
 
-	  Sprite* sprite;		//test sprite.
-	  Sprite* sprite2;		//test sprite.
 
 	  //SpriteAnimated* animation;
 
@@ -38,21 +38,12 @@ class GameLoop
 
 		~GameLoop()
 		{
-			delete sprite;
-			delete sprite2;
+			
 		}
 
 
 		void makeSprites()
 		{
-			sprite2 = new Sprite(
-				glm::vec2(-0.0f,	0.0f),										//Position.
-				glm::vec2(1,		1),											//Size.
-				test);
-			sprite = new Sprite(
-				glm::vec2(-1,	1),										//Position.
-				glm::vec2(1,		1),											//Size.
-				test);
 
 		// 	animation = new SpriteAnimated(
 		// 		glm::vec2(0,		0),										//Position.
@@ -65,10 +56,10 @@ class GameLoop
 		{
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//s	animation-> update(right);
-
-			sprite-> draw();
-			sprite2-> draw();
+			//s	animation-> update(right);
+			LOG_DEBUG("Will now try to draw level.");
+			level.draw();
+			LOG_DEBUG("Finished drawing level.");
 
 			//animation-> draw();
 

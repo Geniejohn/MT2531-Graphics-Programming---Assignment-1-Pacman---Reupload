@@ -62,25 +62,24 @@ class Sprite																	//Is base-class for spriteAnimation.
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
-			//LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
-
+			LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
+			LOG_DEBUG("posX: %f, posY: %f, sizeX: %f, sizeY: %f, Texture: %d", worldPos.x, worldPos.y, spriteSize.x, spriteSize.y, int(textureIndex));
 			pos = worldPos;
 			size = spriteSize;
 			index = textureIndex;
 			origin = glm::vec2(size.x / 2, size.y / 2);
 
-			// GLuint vbo;																//Vertex buffer object for the 4 vertecies.
-			// GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-            //
 
 			glGenBuffers(1, &vbo);
+			LOG_DEBUG("2");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			LOG_DEBUG("3");
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
-
+			LOG_DEBUG("4");
 			glGenBuffers(1, &ebo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
-
+			LOG_DEBUG("5");
 			LOG_DEBUG("Constructor end: VBO: %d, EBO: %d", vbo, ebo);
 
 		}
@@ -101,6 +100,11 @@ class Sprite																	//Is base-class for spriteAnimation.
 			setPosition(pos);
 		}
 
+		void setTexture(Texture t)
+		{
+			index = t;
+		}
+
 		void draw()
 		{
 			// LOG_DEBUG("Draw start: VBO: %d, EBO: %d", vbo, ebo);
@@ -111,7 +115,7 @@ class Sprite																	//Is base-class for spriteAnimation.
 
 
 			// LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-			LOG_DEBUG("UV: %f, %f, %f, %f", UV[0], UV[1], UV[2], UV[3]);
+			//LOG_DEBUG("UV: %f, %f, %f, %f", UV[0], UV[1], UV[2], UV[3]);
 
 			GLfloat vertices[] = {
 				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top

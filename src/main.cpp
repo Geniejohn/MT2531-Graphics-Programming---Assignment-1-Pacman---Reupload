@@ -4,16 +4,18 @@
 #include "gameloop.hpp"
 #include "constants.h"
 #include "resourceManager.hpp"
+#include "level.hpp"
 
-#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
+//#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
 
 ResourceManager resourceManager;
 GameLoop gameLoop;
+
+Level level;
 float dt;																		//DeltaTime: the time it took to complete the last frame.
 
 int main()
 {
-
 	if(resourceManager.startup() != 0)											//Failed to load any of the textures:
 	{
 		LOG_DEBUG("Failed to run resourceManager startup.");
@@ -21,13 +23,13 @@ int main()
 	}
 
 	gameLoop.makeSprites();
+	level = Level(0);
+	LOG_DEBUG("Level created");
 	resourceManager.loadShaderAttributes();										//VERY IMPORTANT, NEEDS TO BE THE LAST THING IN SETUP.
 
 
 	int nbFrames = 0;
 	double lastTime = glfwGetTime();
-
-
 
     do
     {
@@ -45,7 +47,7 @@ int main()
 
         gameLoop.run();
 
-    }while(gameLoop.getRunning());
+    } while(gameLoop.getRunning());
 
 	resourceManager.shutdown();
 
