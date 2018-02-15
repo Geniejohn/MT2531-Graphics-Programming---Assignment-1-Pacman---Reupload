@@ -23,7 +23,7 @@ class ResourceManager
 
 		void loadTextureFromFile(char* path, int no)
 		{
-			LOG_DEBUG("Loaded texture: %d from file: %s", no, path);
+			LOG_DEBUG("Loading texture: %d from file: %s", no, path);
 			int width, height;
 			unsigned char* image;
 			float x, y, widthT, heightT;
@@ -41,6 +41,8 @@ class ResourceManager
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			LOG_DEBUG("Finished loading texture: %d from file: %s", no, path);
+
 		}
 
 	public:
