@@ -14,7 +14,7 @@ class MovableCharacter
 	private:
 		glm::vec2 pos;
 		int type;												//Enum for character-type.
-		float speed;
+		glm::vec2 speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
 
@@ -26,7 +26,7 @@ class MovableCharacter
 
 	public:
 		//Constructor:
-		MovableCharacter(int Id, int typ, float s)
+		MovableCharacter(int Id, int typ, glm::vec2 s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
@@ -100,16 +100,16 @@ class MovableCharacter
 		{
 			switch (dir)
 			{
-				case left: pos[0] -= dt*speed;
+				case left: pos[0] -= dt*speed[0];
 				break;
 
-				case up: pos[1] += dt*speed;
+				case up: pos[1] += dt*speed[1];
 				break;
 
-				case right: pos[0] += dt*speed;
+				case right: pos[0] += dt*speed[0];
 				break;
 
-				case down: pos[1] -= dt*speed;
+				case down: pos[1] -= dt*speed[1];
 				break;
 
 				case still:										//Stays still.

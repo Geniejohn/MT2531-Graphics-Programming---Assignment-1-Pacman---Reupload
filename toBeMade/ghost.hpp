@@ -15,7 +15,7 @@ class Ghost : public MovableCharacter
 	public:
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Ghost(int Id) : MovableCharacter(Id, ghost, GHOST_SPEED*level.retTSize())
+		Ghost(int Id) : MovableCharacter(Id, ghost, glm::vec2(GHOST_SPEED*level.retTSize()[0], GHOST_SPEED*level.retTSize()[0]))
 		{
 			lives = STARTING_LIVES;
 		}
