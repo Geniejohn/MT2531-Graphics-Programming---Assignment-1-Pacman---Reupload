@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "logger.h"
 #include "glm/glm/glm.hpp"
+#include "tile.hpp"
 
 // #ifdef _WIN32 // Windows 10 (Visual Studio)
 // #define skip
@@ -86,6 +87,8 @@ class Level
 				int tempID;
 				int horizIncrement = HORIZONTAL_GAMESPACE/mapWidth;
 				int vertiIncrement = VERTICAL_GAMESPACE/mapHeight;
+				int tSizeX = (2*HORIZONTAL_GAMESPACE)/mapWidth;
+				int tSizeY = (2*VERTICAL_GAMESPACE)/mapHeight;
 				int xPos, yPos;
 
 				for (int i = 0; i < k; i++) 		//Reads level-file and creates tiles.
@@ -107,7 +110,7 @@ class Level
 						yPos = (1-(2-VERTICAL_GAMESPACE*2))-((i/mapHeight)*vertiIncrement);
 
 													//Add new tile and make index 'i' in array point to it.
-						tilePtrs[i] = new Tile(i, xPos, yPos, tempID);
+						tilePtrs[i] = new Tile(i, glm::vec2(xPos, yPos), glm::vec2(tSizeX, tSizeY), tempID);
 					}
 					else							//Is wall.
 					{
