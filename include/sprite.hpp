@@ -36,6 +36,7 @@ class Sprite
 		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
 
 
+	protected:
 		// Gets the index of a frame and returns that frames coordinates on the spritesheet.
 		// Function assumes that the first frame on sheet has index 0.
 		// Returns a pointer to a float array with u1, v1, u2, v2.
