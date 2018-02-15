@@ -11,14 +11,16 @@
 class MovableCharacter
 {
 	private:
-		int tileID;												//ID the tile occupied by character.
 		int xPos;												//X coordinate.
 		int yPos;												//Y coordinate.
 		int type;												//Enum for character-type.
-		int dir;												//Current movement-direction.
-		int desiredDir;											//Desired movement-direction.
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
+
+	protected:
+		int dir;												//Current movement-direction.
+		int desiredDir;											//Desired movement-direction.
+		int tileID;												//ID the tile occupied by character.
 		glm::vec2 tPos;
 
 	public:
@@ -31,8 +33,8 @@ class MovableCharacter
 			xPos = level.getTilePos()[0];
 			yPos = level.getTilePos()[1];
 			type = typ;
-			dir = 2;											//Right.
-			desiredDir = 2;										//Right.
+			dir = STARTING_DIRECTION;
+			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
 		}
 
@@ -137,7 +139,7 @@ class MovableCharacter
 			//Character in center of tile and cannot continue moving in same direction:
 			if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
 			{
-				dir = still;
+				dir = still;									//Sets character to stand still.
 			}
 
 			move();												//Change position and update sprite.
