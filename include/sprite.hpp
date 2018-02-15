@@ -27,6 +27,7 @@ class Sprite
 	private:
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
+		glm::vec2 origin;
 		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
 		Texture index;															//Tell the sprite what texture it's using.
 
@@ -65,7 +66,7 @@ class Sprite
 			pos = worldPos;
 			size = spriteSize;
 			index = textureIndex;
-
+			origin = glm::vec2(size.x / 2, size.y / 2);
 
 			GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 			GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
@@ -83,9 +84,19 @@ class Sprite
 
 		}
 
+		glm::vec2 getSize()
+		{
+			return size;
+		}
+
 		void setPosition(glm::vec2 pos_)
 		{
-			pos = pos_;
+			pos = glm::vec2(pos_.x - origin.x, pos_.y + origin.y);
+		}
+
+		void setOrigin(glm::vec2 origin_)
+		{
+			origin = origin_;
 		}
 
 		void draw()
