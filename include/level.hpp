@@ -267,7 +267,7 @@ class Level
 		//Changes a tiles type.
 		void setTileType(int Id, Texture t)
 		{
-		 tiles[Id].setType(t);
+			tiles[Id].setType(t);
 		}
 
 		void draw()
