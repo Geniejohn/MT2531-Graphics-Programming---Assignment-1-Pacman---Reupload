@@ -14,7 +14,7 @@ class Tile
 		glm::vec2 pos;
 		glm::vec2 size;
 		Texture type;									//Texture Enum.
-		Sprite* sprite;
+		Sprite sprite;
 
 	public:
 		//Constructor:
@@ -26,17 +26,16 @@ class Tile
 			size = s;
 			type = typ;
 			//LOG_DEBUG("posX: %f, posY: %f, sizeX: %f, sizeY: %f, Texture: %d", pos.x, pos.y, size.x, size.y, typ);
-			if(type != wall)
-			{
-				sprite = new Sprite(pos, size, type);				//Creates new sprite of the wanted type.
-			}
+
+			sprite = Sprite(pos, size, type);				//Creates new sprite of the wanted type.
+
 		}
 
 
 		//Deconstructor:
 		~Tile()
 		{
-			//delete sprite;
+
 		}
 
 
@@ -56,7 +55,7 @@ class Tile
 		void setType(Texture t)
 		{
 			type = t;
-			sprite->setTexture(type);
+			sprite.setTexture(type);
 		}
 
 
@@ -68,7 +67,7 @@ class Tile
 
 		void draw()
 		{
-			sprite->draw();
+			sprite.draw();
 		}
 
 };

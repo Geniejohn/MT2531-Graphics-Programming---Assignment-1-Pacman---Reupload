@@ -99,22 +99,19 @@ class Level
 				{
 					tempID = 0;
 					reader >> tempID;
-					if(tempID != 1)					//Not wall.
-					{
-													//'1-HORIZONTAL_GAMESPACE = Padding.
-													//'i%mapWidth' gives number for that row.
-													//Formula: Borderpos + padding + increment.
-					// -1 + ( /2)
-						xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
-						yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
-													//Add new tile and make index 'i' in array point to it.
-					 tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
-					}
-					else							//Is wall.
-					{
-						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, wall));			//Set pointer for wall to NULL.
-					}
+												//'1-HORIZONTAL_GAMESPACE = Padding.
+												//'i%mapWidth' gives number for that row.
+												//Formula: Borderpos + padding + increment.
+												// -1 + ( /2)
+					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
+					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
+
+												//Add new tile and make index 'i' in array point to it.
+					LOG_DEBUG("Creating tile: %d", tempID);
+				 	tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
+
+
 				}
 				LOG_DEBUG("Loop has ended");
 				reader.close();						//Close ifstream.
@@ -275,13 +272,13 @@ class Level
 
 		void draw()
 		{
+
 			for (int i = 0; i < numberOfTiles; i++)
 			{
-				if(tiles[i].retTexture() != wall)						//Not wall.
-				{
-				//	LOG_DEBUG("Calling tile %d's draw-function", i);
-				 tiles[i].draw();
-				}
+
+				// LOG_DEBUG("Calling tile %d's draw-function", i);
+				tiles[i].draw();
+
 			}
 		}
 };

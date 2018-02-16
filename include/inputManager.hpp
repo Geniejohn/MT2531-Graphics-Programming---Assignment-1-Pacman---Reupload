@@ -54,21 +54,25 @@ class InputManager
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_W);
 			if(state == GLFW_PRESS)
 			{
+				LOG_DEBUG("UP!");
 				player.MovableCharacter::changeDesiredDir(up);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_A);
 			if(state == GLFW_PRESS)
 			{
+				LOG_DEBUG("LEFT!");
 				player.MovableCharacter::changeDesiredDir(left);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_S);
 			if(state == GLFW_PRESS)
 			{
+				LOG_DEBUG("DOWN!")
 				player.MovableCharacter::changeDesiredDir(down);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_D);
 			if(state == GLFW_PRESS)
 			{
+				LOG_DEBUG("RIGHT!");
 				player.MovableCharacter::changeDesiredDir(right);
 			}
 		}

@@ -25,7 +25,8 @@ class MovableCharacter
 		int dir;												//Current movement-direction.
 		int desiredDir;											//Desired movement-direction.
 		int tileID;												//ID the tile occupied by character.
-		glm::vec2 tPos;
+		glm::vec2 tPos;											//Positioin of tile we are in.
+		glm::vec2 desTPos;										//Position of tile we are movinw towards.
 
 	public:
 		//Constructor:
@@ -48,6 +49,8 @@ class MovableCharacter
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
+			desTPos = level.getTilePos(level.findNextTile(tileID, desiredDir));
+			LOG_DEBUG("tPos: %f, %f (Position where the entity spawns)", tPos.x, tPos.y);
 		}
 
 
@@ -82,7 +85,7 @@ class MovableCharacter
 		{
 			if(desDir < 0 || desDir > 4)						//'d' out of range.
 			{
-				LOG_DEBUG("Desired direction-argument is out of range(0-3).");
+				LOG_DEBUG("Desired direction-argument is out of range(0-4).");
 			}
 			else												//'d' in range.
 			{
@@ -101,8 +104,9 @@ class MovableCharacter
 		//Update desired direction:
 		void updateDesiredDir(int desDir)
 		{
-			desiredDir = desDir;;
-			//Do more?
+			desiredDir = desDir;
+			LOG_DEBUG("Desired direction: %d", desiredDir);
+			LOG_DEBUG("Current direction: %d", dir);
 		}
 
 
@@ -111,27 +115,27 @@ class MovableCharacter
 			//LOG_DEBUG("move(): dir: %d", dir);
 			switch (dir)
 			{
-				case left: 	pos.x -= dt*PACMAN_SPEED;
-				break;
-
-				case up: 	pos.y += dt*PACMAN_SPEED;
-				break;
-
-				case right: pos.x += dt*PACMAN_SPEED;
-				break;
-
-				case down: 	pos.y -= dt*PACMAN_SPEED;
-				break;
-
 				case still:										//Stays still.
+				break;
+
+				case left: 	pos.x -= dt*speed.x;
+				break;
+
+				case up: 	pos.y += dt*speed.y;
+				break;
+
+				case right: pos.x += dt*speed.x;
+				break;
+
+				case down: 	pos.y -= dt*speed.y;
 				break;
 
 				default: LOG_DEBUG("Direction out of range: %d", dir);
 				break;
 			}
-			pos.x -= dt*speed.x;
 
 			sprite.setPosition(pos);
+			// LOG_DEBUG("Speed: %f, %f", speed.x, speed.y);
 		// /	spriteAnimated.update(pos, dir);					//Call update to run animation.
 		}
 
@@ -197,7 +201,7 @@ class MovableCharacter
 
 			move();												//Change position and update sprite.
 
-			//Character is within the tolerance-value, and is concidered within the center of its current tile:
+			Character is within the tolerance-value, and is concidered within the center of its current tile:
 			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
 				inTileCenter = true;
@@ -216,7 +220,7 @@ class MovableCharacter
 			}
 			else												//Not within tolerance-values.
 			{
-				inTileCenter = false;
+				// inTileCenter = false;
 			}
 		}
 
