@@ -29,37 +29,6 @@ class Level
 		std::vector<int> warps;
 
 
-
-		//Finds the furthest open tile in direction ‘dir’, returns ID of that tile or -2 if dir is out of range:
-		int findDestination(int ID, int dir)
-		{
-			if(dir < 0 && dir > 3)								//‘dir’ is out of range.
-			{
-				return -2;
-			}
-			else
-			{
-				bool go = true;
-				int tempID = -1;
-				int destID = ID;								//ID of the destination-tile, defaults to 'ID'.
-				do 												//Keep searching neighbour until neibour is not empty:
-				{
-					tempID = findNextTile(ID, dir);				//Sets 'destID' to next neighbour.
-					if(isTileEmpty(tempID))						//The tile with ID 'tempID' is empty, it's not NULL.
-					{
-						destID = tempID;						//neighbour is a tile, save as destination.
-					}
-					else							//We hit a wall in our search.
-					{
-						go = false;								//Stop checking neighbour.
-					}
-				} while(go);
-
-				return destID;									//Returns the ID of open tile furthest in direction 'dir'.
-			}
-		}
-
-
 	public:
 
 		Level() = default;
@@ -101,9 +70,19 @@ class Level
 					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
 					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
-																//Add new tile and make index 'i' in array point to it.
+					if(tempID == 7)								//Id for Pacman->Pacman's starting position.
+					{
 
-				 	tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
+					}
+					else if(tempID == 8)
+					{
+
+					}
+					else
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
+					}
 
 
 				}
