@@ -50,7 +50,7 @@ int main()
 			nbFrames = 0;
 			lastTime += 1.0;
 		}
-
+		nbFrames++;
 
         gameLoop.run();
 
