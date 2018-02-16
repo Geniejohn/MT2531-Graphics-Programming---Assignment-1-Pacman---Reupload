@@ -70,13 +70,16 @@ class Level
 					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
 					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
-					if(tempID == 7)								//Id for Pacman->Pacman's starting position.
+					if(tempID == 7)								//ID for Pacman->Pacman's starting position.
 					{
-
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
 					}
-					else if(tempID == 8)
+					else if(tempID == 8)						//ID for warp.
 					{
-
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+						warps.push_back(i);						//Save the tile-ID in warps-vector.
 					}
 					else
 					{
@@ -148,15 +151,6 @@ class Level
 			{
 				return  tiles[ID].retPos();						//Fetch position from wanted tile.
 			}
-		}
-
-
-		//Takes ID of current position's tile-ID, and direction dir,
-		//returns pointer to array with x and y position of tile farthest
-		//in the given direction:
-		glm::vec2 getDestinationPos(int ID, int dir)			//‘dir’: 0=left, 1=up, 2=right, 3=down.
-		{
-			return(getTilePos(findDestination(ID, dir)));		//Finds dest + fetch pos.
 		}
 
 
