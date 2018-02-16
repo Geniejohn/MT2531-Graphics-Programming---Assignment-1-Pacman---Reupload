@@ -9,7 +9,7 @@ const float HORIZONTAL_GAMESPACE = 0.7f;		//Proportion of window containing the 
 const float VERTICAL_GAMESPACE = 0.9f;			//Proportion of window containing the game.
 const float CENTER_TOLERANCE = 0.1f;			//Tolereance for character snap to center.
 //Speed in tiles per second.
-const float GHOST_SPEED = 5.0f;
+const float GHOST_SPEED = 4.4f;
 const float PACMAN_SPEED = 4.5f;
 //Frame updates per second.
 const float PACMAN_ANIMATION_SPEED = 10;
