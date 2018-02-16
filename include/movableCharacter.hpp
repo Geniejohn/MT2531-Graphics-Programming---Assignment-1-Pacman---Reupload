@@ -196,7 +196,6 @@ class MovableCharacter
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{
-			//LOG_DEBUG("Pos: %f, %f", pos.x, pos.y);
 			tPos = level.getTilePos(tileID);					//Updates position of current tile.
 
 			if(desiredDir != dir)
@@ -222,18 +221,14 @@ class MovableCharacter
 
 			move();												//Change position and update sprite.
 
-			LOG_DEBUG("Pacmans position: %f, %f.", pos.x, pos.y);
-
 			//Checks if character has entered a new tile:
 			if(abs(desTPos.x - pos.x) < level.retTSize().x/2.0f && abs(desTPos.y - pos.y) < level.retTSize().y/2.0f)
 			{
 				tileID = level.findNextTile(tileID, dir);		//Sets new current-tile.
 																//Updates position of destination-tile:
 				desTPos = level.getTilePos(level.findNextTile(tileID, dir));
-				LOG_DEBUG("Entered a new tile.");
 			}
 
-			LOG_DEBUG("Distance between pacman and its tile: %f, %f. Tolerence values are: %f, %f", abs(tPos.x - pos.x), abs(tPos.y - pos.y), level.retTolerance().x, level.retTolerance().y);
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
 			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
@@ -253,12 +248,10 @@ class MovableCharacter
 				}
 				LOG_DEBUG("Entered center of new tile.");
 			}
-			//LOG_DEBUG("Distance between pacman and its tile: %f, %f", abs(tPos.x - pos.x), abs(tPos.y - pos.y));
 			//If character is not within the tolerance value if its current-tile, set bool inTileCenter to false:
 			if(abs(tPos.x - pos.x) > level.retTolerance().x || abs(tPos.y - pos.y) > level.retTolerance().y)											//Not within tolerance-values.
 			{
 				inTileCenter = false;
-				LOG_DEBUG("inTileCenter set to false!");
 			}
 		}
 
