@@ -6,10 +6,12 @@
 #include "level.hpp"
 #include "pacman.hpp"
 #include "inputManager.hpp"
+#include "ghost.hpp"
 
 extern Level level;
 extern InputManager inputManager;
 extern Pacman player;
+extern Ghost ghosts[];
 
 class GameLoop
 {
@@ -33,6 +35,10 @@ class GameLoop
 		void makeSprites()
 		{
 			player = Pacman(478);												//506 Start on the 0x17th tile.
+			ghosts[0] = Ghost(113);
+			ghosts[1] = Ghost(114);
+			ghosts[2] = Ghost(115);
+			ghosts[3] = Ghost(116);
 		}
 
 
