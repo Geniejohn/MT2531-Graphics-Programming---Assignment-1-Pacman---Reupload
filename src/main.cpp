@@ -42,16 +42,6 @@ int main()
     {
 																				//Measure speed:
 		double currentTime = glfwGetTime();
-		// if (currentTime - lastTime >= 1.0)  									//If last prinf() was more than 1sec ago
-		// {
-		// 	double temp =  double(nbFrames) / 1000.0;										//Printf and reset
-		// 	dt = float(temp);
-		// 	LOG_DEBUG("dt: %f",dt);
-		// 	nbFrames = 0;
-		// 	lastTime += 1.0;
-		// }
-		// nbFrames++;
-
 
 		nbFrames++;
 		if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1sec ago
