@@ -1,9 +1,11 @@
-#include "MovableCharacter"
-#include "constants.h"
+#pragma once
 #include "glm/glm/glm.hpp"
 
+#include "movableCharacter.hpp"
+#include "constants.h"
+
 extern Level level;
-extern GAMEUI gameUI;
+// extern GAMEUI gameUI;
 
 class Pacman : public MovableCharacter
 {
@@ -12,9 +14,15 @@ class Pacman : public MovableCharacter
 		int startingTileID;										//ID of tile Pacman spawns at.
 
 	public:
+
+		Pacman() = default;
+
+
+		Pacman& operator =(const Pacman& other) = default;
+
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Pacman(int Id) : MovableCharacter(Id, pacman, glm::vec2(GHOST_SPEED*level.retTSize()[0], GHOST_SPEED*level.retTSize()[0]))
+		Pacman(int Id) : MovableCharacter(Id, pellet, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().x))
 		{
 			startingTileID = Id;
 			lives = STARTING_LIVES;
@@ -48,7 +56,7 @@ class Pacman : public MovableCharacter
 			}
 			else												//Game-over.
 			{
-				gameUI.gameOver();
+			//	gameUI.gameOver();
 			}
 		}
 
@@ -57,6 +65,6 @@ class Pacman : public MovableCharacter
 		void respawn()
 		{
 			MovableCharacter::tileID = startingTileID;
-			MovableCharacter::pos = level.retTilePos(startingTileID);
+			MovableCharacter::pos = level.getTilePos(startingTileID);
 		}
 };

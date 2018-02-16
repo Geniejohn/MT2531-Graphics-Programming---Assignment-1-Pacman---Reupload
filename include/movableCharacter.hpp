@@ -1,21 +1,23 @@
-#include "sprite.hpp"
-#include "logger.h"
-#include "level.hpp"
+#pragma once
+#include <cmath>												// abs()
 #include "glm/glm/glm.hpp"
-#include "spriteAnimated.hpp"
-#include "cmath"												// abs()
+#include "logger.h"
+// #include "spriteAnimated.hpp"
+#include "sprite.hpp"
+#include "level.hpp"
+#include "pacman.hpp"
 
 extern Level level;
 extern float dt;												//DeltaTime.
-extern GameUI gameUI;
+// extern GameUI gameUI;
 
 //Base-class for all movable characters:
 class MovableCharacter
 {
 	private:
-		int type;												//Enum for character-type.
+		Texture type;												//Enum for character-type.
 		glm::vec2 speed;
-		SpriteAnimated spriteAnimated;
+		Sprite sprite;
 		bool inTileCenter;
 
 	protected:
@@ -27,15 +29,22 @@ class MovableCharacter
 
 	public:
 		//Constructor:
-		MovableCharacter(int Id, int typ, glm::vec2 s)
+
+		MovableCharacter() = default;
+
+
+		MovableCharacter& operator =(const MovableCharacter& other) = default;
+
+
+		MovableCharacter(int Id, Texture typ, glm::vec2 s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
 			type = typ;
 			speed = s;
-			pos = level.getTilePos();
+			pos = level.getTilePos(tileID);
 																//Creates new sprite of wanted type:
-			spriteAnimated = new SpriteAnimated(pos, level.retTSize(), typ);
+			sprite = Sprite(pos, level.retTSize(), type);
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
@@ -45,7 +54,7 @@ class MovableCharacter
 		//Deconstructor:
 		~MovableCharacter()
 		{
-			delete sprite;
+
 		}
 
 
@@ -97,20 +106,20 @@ class MovableCharacter
 		}
 
 
-		void move();
+		void move()
 		{
 			switch (dir)
 			{
-				case left: pos[0] -= dt*speed[0];
+				case left: pos.x -= speed.x;//dt*speed.x;
 				break;
 
-				case up: pos[1] += dt*speed[1];
+				case up: pos.y += speed.y;//dt*speed.y;
 				break;
 
-				case right: pos[0] += dt*speed[0];
+				case right: pos.x += speed.x;//dt*speed.x;
 				break;
 
-				case down: pos[1] -= dt*speed[1];
+				case down: pos.y -= speed.y;//dt*speed.y;
 				break;
 
 				case still:										//Stays still.
@@ -120,7 +129,8 @@ class MovableCharacter
 				break;
 			}
 
-			spriteAnimated.update(pos, dir);					//Call update to run animation.
+			sprite.setPosition(pos);
+		// /	spriteAnimated.update(pos, dir);					//Call update to run animation.
 		}
 
 
@@ -185,7 +195,7 @@ class MovableCharacter
 			move();												//Change position and update sprite.
 
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
-			if(abs(tPos[0] - pos[0]) < level.retTolerance()[0] && abs(tPos[1] - pos[1]) < level.retTolerance()[1] && inTileCenter == false)
+			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
 				inTileCenter = true;
 																//Pacman enters tile with item to pick up:
@@ -194,7 +204,7 @@ class MovableCharacter
 					switch (level.retTileType(tileID))			//Checks for item-type.
 					{
 						case pellet:							//If pellet.
-							gameUI.addScore(SCORE_PELLET);		//Add pellet-score to score total.
+							//gameUI.addScore(SCORE_PELLET);		//Add pellet-score to score total.
 						default:
 							break;
 					}
@@ -205,6 +215,11 @@ class MovableCharacter
 			{
 				inTileCenter = false;
 			}
+		}
+
+		void draw()
+		{
+			sprite.draw();
 		}
 
 };

@@ -40,7 +40,7 @@ class Tile
 		}
 
 
-		int retType()
+		Texture retType()
 		{
 			return type;
 		}

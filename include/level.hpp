@@ -35,12 +35,6 @@ class Level
  		std::vector<Tile> tiles;									//Pointer for tile-array.
 
 
-		//Returns the type of the tile with the given ID:
-		int retTileType(int ID)
-		{
-			return  tiles[ID].retType();			//Calls the Tile-objects returnType.
-		}
-
 
 		//Finds the furthest open tile in direction ‘dir’, returns ID of that tile or -2 if dir is out of range:
 		int findDestination(int ID, int dir)
@@ -148,6 +142,12 @@ class Level
 		~Level()
 		{
 
+		}
+
+		//Returns the type of the tile with the given ID:
+		Texture retTileType(int ID)
+		{
+			return  tiles[ID].retType();			//Calls the Tile-objects returnType.
 		}
 
 		//Return Width:
@@ -278,7 +278,7 @@ class Level
 			{
 				if(tiles[i].retTexture() != wall)						//Not wall.
 				{
-					LOG_DEBUG("Calling tile %d's draw-function", i);
+				//	LOG_DEBUG("Calling tile %d's draw-function", i);
 				 tiles[i].draw();
 				}
 			}

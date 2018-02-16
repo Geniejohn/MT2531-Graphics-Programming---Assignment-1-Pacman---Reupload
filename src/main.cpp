@@ -3,13 +3,19 @@
 #include "logger.h"
 #include "gameloop.hpp"
 #include "constants.h"
+#include "inputManager.hpp"
 #include "resourceManager.hpp"
 #include "level.hpp"
+#include "pacman.hpp"
+
 
 //#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
 
 ResourceManager resourceManager;
+InputManager inputManager;
 GameLoop gameLoop;
+Pacman player;
+
 
 Level level;
 float dt;																		//DeltaTime: the time it took to complete the last frame.
@@ -22,6 +28,7 @@ int main()
 		return -1;																//Exit with code -1.
 	}
 
+	//player = Pacman(506);												//Start on the 0x17th tile.
 	gameLoop.makeSprites();
 	level = Level(0);
 	LOG_DEBUG("Level created");

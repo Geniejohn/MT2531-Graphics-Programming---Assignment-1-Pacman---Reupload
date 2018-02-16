@@ -59,6 +59,10 @@ class Sprite																	//Is base-class for spriteAnimation.
 		}
 	public:
 
+		Sprite() = default;
+
+		Sprite& operator =(const Sprite& other) = default;
+
 		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);

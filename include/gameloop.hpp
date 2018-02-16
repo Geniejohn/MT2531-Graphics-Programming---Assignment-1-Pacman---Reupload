@@ -18,16 +18,22 @@
 //#include "spriteAnimated.hpp"
 #include "constants.h"
 #include "level.hpp"
+#include "pacman.hpp"
+#include "inputManager.hpp"
 
 extern Level level;
+extern InputManager inputManager;
+extern Pacman player;
 
 class GameLoop
 {
     private:
       bool running;			//True as long as game is running.
 
-
 	  //SpriteAnimated* animation;
+	  Sprite sprite;
+	  Sprite sprite1;
+
 
     public:
         GameLoop()
@@ -38,12 +44,21 @@ class GameLoop
 
 		~GameLoop()
 		{
-			
+
 		}
 
 
 		void makeSprites()
 		{
+			player = Pacman(506);												//Start on the 0x17th tile.
+			sprite = Sprite(
+				glm::vec2(-1, 1),
+				glm::vec2(1, 1),
+				pellet);
+			sprite1 = Sprite(
+				glm::vec2(0, 0),
+				glm::vec2(1, 1),
+				empty);
 
 		// 	animation = new SpriteAnimated(
 		// 		glm::vec2(0,		0),										//Position.
@@ -57,11 +72,19 @@ class GameLoop
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			//s	animation-> update(right);
-			LOG_DEBUG("Will now try to draw level.");
-			level.draw();
-			LOG_DEBUG("Finished drawing level.");
+
+			inputManager.update();
+			player.update();
+
 
 			//animation-> draw();
+			//LOG_DEBUG("Will now try to draw level.");
+			level.draw();
+			//LOG_DEBUG("Finished drawing level.");
+			player.draw();
+			sprite.draw();
+			sprite1.draw();
+
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();
