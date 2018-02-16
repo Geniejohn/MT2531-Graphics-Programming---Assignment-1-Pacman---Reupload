@@ -75,6 +75,7 @@ class Ghost : public MovableCharacter
 		//Return a vector equal to the difference in positon between ghost and pacman:
 		glm::vec2 findDirDiff()
 		{
+			LOG_DEBUG("Differenc between ghost and pacman: %f, %f", MovableCharacter::tPos.x + player.retTilePos().x, MovableCharacter::tPos.y + player.retTilePos().y);
 			return glm::vec2(MovableCharacter::tPos.x + player.retTilePos().x,
 							 MovableCharacter::tPos.y + player.retTilePos().y);
 		}
