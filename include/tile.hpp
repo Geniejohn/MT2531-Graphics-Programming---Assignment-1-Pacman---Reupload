@@ -20,7 +20,6 @@ class Tile
 		//Constructor:
 		Tile(int Id, glm::vec2 p, glm::vec2 s, Texture typ)
 		{
-			LOG_DEBUG("typ: %d'", typ);
 			ID = Id;
 			pos = p;
 			size = s;

@@ -65,8 +65,8 @@ class SpriteAnimated : public Sprite
 					reversed *= -1;
 				}
 				timeLeft = frameDelay;											//Reset countdown.
-				LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
-				 				frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
+				//LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
+				//				frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
 
 			}
 		}
@@ -79,7 +79,7 @@ class SpriteAnimated : public Sprite
 			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
 		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, 4, 4);
-			LOG_DEBUG("FrameCount: %d UV: %f, %f, %f, %f", currentFrame, UV.x, UV.y, UV.z, UV.w);
+			//LOG_DEBUG("FrameCount: %d UV: %f, %f, %f, %f", currentFrame, UV.x, UV.y, UV.z, UV.w);
 			GLfloat vertices[] = {
 				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y, 	// Left 	Top
 				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y, 	// Right 	Top

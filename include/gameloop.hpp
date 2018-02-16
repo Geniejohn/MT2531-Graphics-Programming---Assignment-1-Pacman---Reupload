@@ -34,7 +34,7 @@ class GameLoop
 
 		void makeSprites()
 		{
-			player = Pacman(478);												//506 Start on the 0x17th tile.
+			player = Pacman(478);												//478 Start on the 0x17th tile.
 			ghosts[0] = Ghost(113);
 			ghosts[1] = Ghost(114);
 			ghosts[2] = Ghost(115);
@@ -48,8 +48,17 @@ class GameLoop
 
 			inputManager.update();
 			player.update();
+			ghosts[0].update();
+			ghosts[1].update();
+			ghosts[2].update();
+			ghosts[3].update();
+			
 			level.draw();
 			player.draw();
+			ghosts[0].draw();
+			ghosts[1].draw();
+			ghosts[2].draw();
+			ghosts[3].draw();
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();
