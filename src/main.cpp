@@ -7,6 +7,7 @@
 #include "resourceManager.hpp"
 #include "level.hpp"
 #include "pacman.hpp"
+#include "ghost.hpp"
 
 
 //#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
@@ -15,6 +16,7 @@ ResourceManager resourceManager;
 InputManager inputManager;
 GameLoop gameLoop;
 Pacman player;
+Ghost ghosts[4];
 
 
 Level level;

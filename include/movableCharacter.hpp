@@ -49,7 +49,7 @@ class MovableCharacter
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
 			desTPos = level.getTilePos(level.findNextTile(tileID, desiredDir));
-			LOG_DEBUG("tPos: %f, %f (Position where the entity spawns)", tPos.x, tPos.y);
+			//LOG_DEBUG("tPos: %f, %f (Position where the entity spawns)", tPos.x, tPos.y);
 		}
 
 
