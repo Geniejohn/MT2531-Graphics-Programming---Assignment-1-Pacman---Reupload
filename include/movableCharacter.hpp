@@ -108,26 +108,28 @@ class MovableCharacter
 
 		void move()
 		{
+			//LOG_DEBUG("move(): dir: %d", dir);
 			switch (dir)
 			{
-				case left: pos.x -= speed.x;//dt*speed.x;
+				case left: 	pos.x -= dt*PACMAN_SPEED;
 				break;
 
-				case up: pos.y += speed.y;//dt*speed.y;
+				case up: 	pos.y += dt*PACMAN_SPEED;
 				break;
 
-				case right: pos.x += speed.x;//dt*speed.x;
+				case right: pos.x += dt*PACMAN_SPEED;
 				break;
 
-				case down: pos.y -= speed.y;//dt*speed.y;
+				case down: 	pos.y -= dt*PACMAN_SPEED;
 				break;
 
 				case still:										//Stays still.
 				break;
 
-				default: LOG_DEBUG("Direction out of range.");
+				default: LOG_DEBUG("Direction out of range: %d", dir);
 				break;
 			}
+			pos.x -= dt*speed.x;
 
 			sprite.setPosition(pos);
 		// /	spriteAnimated.update(pos, dir);					//Call update to run animation.
@@ -176,6 +178,7 @@ class MovableCharacter
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{
+			//LOG_DEBUG("Pos: %f, %f", pos.x, pos.y);
 			tPos = level.getTilePos(tileID);					//Updates position of current tile.
 
 			//Can change direction, traversable tile in desired direction:

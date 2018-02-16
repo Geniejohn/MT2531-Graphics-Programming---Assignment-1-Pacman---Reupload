@@ -92,6 +92,7 @@ class Level
 
 				int tempID;
 				tSize = glm::vec2((2*HORIZONTAL_GAMESPACE)/float(mapWidth), (2*VERTICAL_GAMESPACE)/float(mapHeight));
+				LOG_DEBUG("tSize calculated: %f, %f", tSize.x, tSize.y);
 				float xPos, yPos;
 
 				for (int i = 0; i < numberOfTiles; i++) 		//Reads level-file and creates tiles.

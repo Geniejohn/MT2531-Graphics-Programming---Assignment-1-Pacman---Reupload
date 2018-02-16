@@ -22,7 +22,7 @@ class Pacman : public MovableCharacter
 
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Pacman(int Id) : MovableCharacter(Id, pellet, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().x))
+		Pacman(int Id) : MovableCharacter(Id, pellet, glm::vec2(PACMAN_SPEED*level.retTSize().x, PACMAN_SPEED*level.retTSize().x))
 		{
 			startingTileID = Id;
 			lives = STARTING_LIVES;

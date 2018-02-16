@@ -29,8 +29,8 @@ int main()
 	}
 
 	//player = Pacman(506);												//Start on the 0x17th tile.
-	gameLoop.makeSprites();
 	level = Level(0);
+	gameLoop.makeSprites();
 	LOG_DEBUG("Level created");
 	resourceManager.loadShaderAttributes();										//VERY IMPORTANT, NEEDS TO BE THE LAST THING IN SETUP.
 
