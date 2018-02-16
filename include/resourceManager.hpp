@@ -28,7 +28,7 @@ class ResourceManager
 			unsigned char* image;
 			float x, y, widthT, heightT;
 
-			glActiveTexture(GL_TEXTURE0);
+			// glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, textures[no]);
 			image = SOIL_load_image(path, &width, &height, 0, SOIL_LOAD_AUTO);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
@@ -122,9 +122,6 @@ class ResourceManager
 			shaderProgram = create_program("vertex.vert", "fragment.frag");
 
 
-			GLuint vao;																//Vertex array with the 4 verticies.
-			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
-			glBindVertexArray(vao);
 
 			glGenTextures(TEXTURE_COUNT, textures);
 

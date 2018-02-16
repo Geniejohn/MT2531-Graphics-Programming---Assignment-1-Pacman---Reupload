@@ -32,10 +32,9 @@ class Sprite																	//Is base-class for spriteAnimation.
 		glm::vec2 origin;
 		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
 
-
+		GLuint vao;																//Vertex array with the 4 verticies.
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
 		GLuint ebo;																//Element buffer that connects the 4 vertecies into 2 triangles.
-
 
 
 		// Gets the index of a frame and returns that frames coordinates on the spritesheet.
@@ -74,18 +73,19 @@ class Sprite																	//Is base-class for spriteAnimation.
 			origin = glm::vec2(size.x / 2, size.y / 2);
 
 
+			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
+			glBindVertexArray(vao);
+
 			glGenBuffers(1, &vbo);
-			LOG_DEBUG("2");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			LOG_DEBUG("3");
 			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 7 * 4, NULL, GL_DYNAMIC_DRAW);
-			LOG_DEBUG("4");
+
 			glGenBuffers(1, &ebo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint)*3*2, NULL, GL_DYNAMIC_DRAW);
-			LOG_DEBUG("5");
 			LOG_DEBUG("Constructor end: VBO: %d, EBO: %d", vbo, ebo);
 
+			resourceManager.loadShaderAttributes();
 		}
 
 		glm::vec2 getSize()
@@ -111,15 +111,12 @@ class Sprite																	//Is base-class for spriteAnimation.
 
 		void draw()
 		{
-			// LOG_DEBUG("Draw start: VBO: %d, EBO: %d", vbo, ebo);
+			glBindVertexArray(vao);
 
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(index));
+			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
 		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
-
-
-			// LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-			//LOG_DEBUG("UV: %f, %f, %f, %f", UV[0], UV[1], UV[2], UV[3]);
 
 			GLfloat vertices[] = {
 				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top
@@ -128,11 +125,9 @@ class Sprite																	//Is base-class for spriteAnimation.
 				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV[2], 	UV[3] 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
-			// LOG_DEBUG("Echo");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
 
-			// LOG_DEBUG("Foxtrot");
 
 
 			GLuint elements[] = {
@@ -142,20 +137,9 @@ class Sprite																	//Is base-class for spriteAnimation.
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
-			// LOG_DEBUG("Golf");
 
-			resourceManager.loadShaderAttributes();
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
-			// LOG_DEBUG("Infra");
-
-			// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			// glBindBuffer(GL_ARRAY_BUFFER, 0);
-			//glBindVertexArray(0);
-			// LOG_DEBUG("Jimmie");
-
-			// LOG_DEBUG("Draw end: VBO: %d, EBO: %d", vbo, ebo);
-
 
 		}
 
