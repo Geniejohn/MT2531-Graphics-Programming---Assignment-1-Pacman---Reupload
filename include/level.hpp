@@ -1,21 +1,14 @@
 #pragma once
 
-#include <fstream>									//ifstream to load map.
+#include <fstream>												//ifstream to load map.
 #include <string.h>
-#include <string>									//(to_string).
+#include <string>												//(to_string).
 #include "constants.h"
 #include "logger.h"
 #include "glm/glm/glm.hpp"
 #include "tile.hpp"
 #include <vector>
 
-// #ifdef _WIN32 // Windows 10 (Visual Studio)
-// #define skip
-//
-// #else  // Linux and Mac OS
-//
-//
-// #endif
 
 //Manages the map:
 class Level
@@ -32,38 +25,8 @@ class Level
 		int mapWidth;
 		int mapHeight;
 		int numberOfTiles;
- 		std::vector<Tile> tiles;									//Pointer for tile-array.
-
-
-
-		//Finds the furthest open tile in direction ‘dir’, returns ID of that tile or -2 if dir is out of range:
-		int findDestination(int ID, int dir)
-		{
-			if(dir < 0 && dir > 3)					//‘dir’ is out of range.
-			{
-				return -2;
-			}
-			else
-			{
-				bool go = true;
-				int tempID = -1;
-				int destID = ID;					//ID of the destination-tile, defaults to 'ID'.
-				do 									//Keep searching neighbour until neibour is not empty:
-				{
-					tempID = findNextTile(ID, dir);	//Sets 'destID' to next neighbour.
-					if(isTileEmpty(tempID))			//The tile with ID 'tempID' is empty, it's not NULL.
-					{
-						destID = tempID;			//neighbour is a tile, save as destination.
-					}
-					else							//We hit a wall in our search.
-					{
-						go = false;					//Stop checking neighbour.
-					}
-				} while(go);
-
-				return destID;						//Returns the ID of open tile furthest in direction 'dir'.
-			}
-		}
+ 		std::vector<Tile> tiles;								//Pointer for tile-array.
+		std::vector<int> warps;
 
 
 	public:
@@ -100,16 +63,29 @@ class Level
 					tempID = 0;
 					reader >> tempID;
 
-												//'1-HORIZONTAL_GAMESPACE = Padding.
-												//'i%mapWidth' gives number for that row.
-												//Formula: Borderpos + padding + increment.
-												// -1 + ( /2)
+																//'1-HORIZONTAL_GAMESPACE = Padding.
+																//'i%mapWidth' gives number for that row.
+																//Formula: Borderpos + padding + increment.
+																// -1 + ( /2)
 					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
 					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
-												//Add new tile and make index 'i' in array point to it.
-					LOG_DEBUG("Creating tile: %d", tempID);
-				 	tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
+					if(tempID == 7)								//ID for Pacman->Pacman's starting position.
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+					}
+					else if(tempID == 8)						//ID for warp.
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+						warps.push_back(i);						//Save the tile-ID in warps-vector.
+					}
+					else
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
+					}
 
 
 				}
@@ -136,17 +112,12 @@ class Level
 		}
 
 
-		//Deconstructor:
-		~Level()
-		{
-
-		}
-
 		//Returns the type of the tile with the given ID:
 		Texture retTileType(int ID)
 		{
-			return  tiles[ID].retType();			//Calls the Tile-objects returnType.
+			return  tiles[ID].retType();						//Calls the Tile-objects returnType.
 		}
+
 
 		//Return Width:
 		int retW()
@@ -176,80 +147,71 @@ class Level
 				LOG_DEBUG("Did not fetch position of tile since ID is out of range.");
 				return glm::vec2(-2, -2);
 			}
-			else									//ID is in range.
+			else												//ID is in range.
 			{
-				return  tiles[ID].retPos();	//Fetch position from wanted tile.
+				return  tiles[ID].retPos();						//Fetch position from wanted tile.
 			}
 		}
 
 
-		//Takes ID of current position's tile-ID, and direction dir,
-		//returns pointer to array with x and y position of tile farthest
-		//in the given direction:
-		glm::vec2 getDestinationPos(int ID, int dir)		//‘dir’: 0=left, 1=up, 2=right, 3=down.
-		{
-			return(getTilePos(findDestination(ID, dir)));		//Finds dest + fetch pos.
-		}
-
-
 		//Finds adjecant tile, returns -1 if no tile in that direction, -2 if dir is out of range:
-		int findNextTile(int ID, int dir)			//‘dir’: 0=left, 1=up, 2=right, 3=down.
+		int findNextTile(int ID, int dir)						//‘dir’: 0=left, 1=up, 2=right, 3=down.
 		{
 			switch(dir)
 			{
-			case left: if(ID%mapWidth != 1)			//Not on the left map edge.
+			case left: if(ID%mapWidth != 1)						//Not on the left map edge.
 					{
 						return (ID-1);
 					}
 					else
 					{
-						return -1;					//No tile to the left.
+						return -1;								//No tile to the left.
 					}
-			case up: if(ID/mapWidth != 0)			//Not on the upper map edge.
+			case up: if(ID/mapWidth != 0)						//Not on the upper map edge.
 					{
-						return (ID-mapWidth);		//Tile above.
+						return (ID-mapWidth);					//Tile above.
 					}
 					else
 					{
-						return -1;					//No tile above.
+						return -1;								//No tile above.
 					}
-			case right: if(ID%mapWidth != 0)		//Not on the rigth map edge.
+			case right: if(ID%mapWidth != 0)					//Not on the rigth map edge.
 					{
 						return (ID+1);
 					}
 					else
 					{
-						return -1;					//No tile to the right.
+						return -1;								//No tile to the right.
 					}
-													//Not on the lower map edge.
+																//Not on the lower map edge.
 			case down: if(ID/mapWidth !=  mapHeight-1)
 					{
-						return (ID+mapWidth);		//Tile below.
+						return (ID+mapWidth);					//Tile below.
 					}
 					else
 					{
-						return -1;					//No tile below.
+						return -1;								//No tile below.
 					}
 			default: break;
 			}
-			return -2;								//‘dir’ neither left, up, right or down.
+			return -2;											//‘dir’ neither left, up, right or down.
 		}
 
 
 		//Gets type from a tile in array and returns it:
 		bool isTileEmpty(int ID)
 		{
-			if(ID < 0 || ID > (mapWidth*mapHeight)-1)	//ID is not within range.
+			if(ID < 0 || ID > (mapWidth*mapHeight)-1)			//ID is not within range.
 			{
 				return 0;
 			}
-			else										//ID is within range.
+			else												//ID is within range.
 			{
-				if(tiles[ID].retTexture() != wall)					//Tile with that ID exists.
+				if(tiles[ID].retTexture() != wall)				//Tile with that ID exists.
 				{
 					return 1;
 				}
-				else									//Tile does not exist(wall).
+				else											//Tile does not exist(wall).
 				{
 					return 0;
 				}
@@ -270,15 +232,12 @@ class Level
 			tiles[Id].setType(t);
 		}
 
+
 		void draw()
 		{
-
 			for (int i = 0; i < numberOfTiles; i++)
 			{
-
-				// LOG_DEBUG("Calling tile %d's draw-function", i);
 				tiles[i].draw();
-
 			}
 		}
 };
