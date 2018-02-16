@@ -107,6 +107,7 @@ class Sprite																	//Is base-class for spriteAnimation.
 		void setTexture(Texture t)
 		{
 			index = t;
+			LOG_DEBUG("Changed Texture!");
 		}
 
 		void draw()
