@@ -16,7 +16,7 @@ const float PACMAN_ANIMATION_SPEED = 2;
 const float GHOST_ANIMATION_SPEED = 1;
 
 
-const int TEXTURE_COUNT = 5;					//The total number of textures that will be loaded.
+const int TEXTURE_COUNT = 6;					//The total number of textures that will be loaded.
 enum Texture : int								//The different textrues a static sprite can have.
 {
  	pellet, wall, empty, test, pacSheet, ghostSheet, upgrade,
