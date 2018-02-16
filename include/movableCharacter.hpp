@@ -201,7 +201,15 @@ class MovableCharacter
 
 			move();												//Change position and update sprite.
 
-			Character is within the tolerance-value, and is concidered within the center of its current tile:
+			//Checks if character has entered a new tile:
+			if(abs(desTPos.x - pos.x) < level.retTSize().x && abs(desTPos.y - pos.y) < level.retTSize().y)
+			{
+				tileID = level.findNextTile(tileID, dir);		//Sets new current-tile.
+																//Updates position of destination-tile:
+				desTPos = level.getTilePos(level.findNextTile(tileID, dir));
+			}
+
+			//Character is within the tolerance-value, and is concidered within the center of its current tile:
 			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
 				inTileCenter = true;
@@ -218,9 +226,10 @@ class MovableCharacter
 					level.setTileType(tileID, empty);			//Empty that tile as Pacman has just picked up item.
 				}
 			}
-			else												//Not within tolerance-values.
+			//If character is not within the tolerance value if its current-tile, set bool inTileCenter to false:
+			else if(abs(tPos.x - pos.x) > level.retTolerance().x && abs(tPos.y - pos.y) > level.retTolerance().y)											//Not within tolerance-values.
 			{
-				// inTileCenter = false;
+				inTileCenter = false;
 			}
 		}
 

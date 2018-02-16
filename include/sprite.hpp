@@ -70,7 +70,7 @@ class Sprite																	//Is base-class for spriteAnimation.
 			pos = worldPos;
 			size = spriteSize;
 			index = textureIndex;
-			origin = glm::vec2(size.x / 2, size.y / 2);
+			//origin = glm::vec2(size.x / 2, size.y / 2);
 
 
 			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
