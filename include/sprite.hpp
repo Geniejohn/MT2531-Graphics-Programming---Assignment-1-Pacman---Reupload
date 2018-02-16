@@ -18,6 +18,7 @@
 #include "constants.h"
 
 extern ResourceManager resourceManager;
+extern float dt;
 
 // extern GLuint vao;																//Vertex array with the 4 verticies.
 

@@ -2,8 +2,6 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "glm/glm/glm.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
-#include "glm/glm/gtc/type_ptr.hpp"
 
 #include "resourceManager.hpp"
 #include "constants.h"
@@ -55,20 +53,20 @@ class SpriteAnimated : public Sprite
 		{
 			setPosition(pos_);
 			direction = dir;
+
 			timeLeft -= dt;																//Update the frame if its time:
 
-			if(timeLeft > 0)
+			if(timeLeft <= 0)
 			{																	//If time to switch frame:
+				timeLeft = frameDelay;											//Reset countdown.
 				currentFrame += reversed;										//Increment frame count. Or decrement if reversed order.
 				if(currentFrame == frameCount-1 || currentFrame == 0)
 				{
 					reversed *= -1;
 				}
-				timeLeft = frameDelay;											//Reset countdown.
-				LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
-				 				frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
-
 			}
+			LOG_DEBUG("	\n\n\ndt: %f, Framecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
+			dt, frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
 		}
 
 		void draw()

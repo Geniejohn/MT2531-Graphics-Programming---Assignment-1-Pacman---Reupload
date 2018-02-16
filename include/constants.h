@@ -12,7 +12,7 @@ const float CENTER_TOLERANCE = 0.1f;			//Tolereance for character snap to center
 const float GHOST_SPEED = 5.0f;
 const float PACMAN_SPEED = 4.5f;
 //Frame updates per second.
-const float PACMAN_ANIMATION_SPEED = 2;
+const float PACMAN_ANIMATION_SPEED = 10;
 const float GHOST_ANIMATION_SPEED = 1;
 
 
