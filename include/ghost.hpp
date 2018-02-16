@@ -1,23 +1,29 @@
-#include "MovableCharacter"
+#pragma once
+#include "movableCharacter.hpp"
 #include "constants.h"
 #include <cstdlib>												//rand()
 #include "glm/glm/glm.hpp"
 #include "cmath"												// abs()
 #include "logger.h"
+#include "pacman.hpp"
 
 extern Level level;
-extern Pacman pacman;
+extern Pacman player;
 
 class Ghost : public MovableCharacter
 {
 	private:
 
 	public:
+
+			Ghost() = default;
+			Ghost& operator =(const Ghost& other) = default;
+
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Ghost(int Id) : MovableCharacter(Id, ghost, glm::vec2(GHOST_SPEED*level.retTSize()[0], GHOST_SPEED*level.retTSize()[0]))
+		Ghost(int Id) : MovableCharacter(Id, ghostAnimation, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().y))
 		{
-			lives = STARTING_LIVES;
+
 		}
 
 
@@ -69,8 +75,8 @@ class Ghost : public MovableCharacter
 		//Return a vector equal to the difference in positon between ghost and pacman:
 		glm::vec2 findDirDiff()
 		{
-			return glm::vec2(MovableCharacter::tPos[0] + pacman.retTilePos()[0],
-							 MovableCharacter::tPos[1] + pacman.retTilePos()[1]);													);
+			return glm::vec2(MovableCharacter::tPos.x + player.retTilePos().x,
+							 MovableCharacter::tPos.y + player.retTilePos().y);
 		}
 
 
