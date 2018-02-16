@@ -2,8 +2,7 @@
 #include <cmath>												// abs()
 #include "glm/glm/glm.hpp"
 #include "logger.h"
-// #include "spriteAnimated.hpp"
-#include "sprite.hpp"
+#include "spriteAnimated.hpp"
 #include "level.hpp"
 #include "pacman.hpp"
 
@@ -15,9 +14,9 @@ extern float dt;												//DeltaTime.
 class MovableCharacter
 {
 	private:
-		Texture type;												//Enum for character-type.
+		Animation type;												//Enum for character-type.
 		glm::vec2 speed;
-		Sprite sprite;
+		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
 
 	protected:
@@ -37,7 +36,7 @@ class MovableCharacter
 		MovableCharacter& operator =(const MovableCharacter& other) = default;
 
 
-		MovableCharacter(int Id, Texture typ, glm::vec2 s)
+		MovableCharacter(int Id, Animation typ, glm::vec2 s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
@@ -45,7 +44,7 @@ class MovableCharacter
 			speed = s;
 			pos = level.getTilePos(tileID);
 																//Creates new sprite of wanted type:
-			sprite = Sprite(pos, level.retTSize(), type);
+			spriteAnimated = SpriteAnimated(pos, level.retTSize(), type);
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
@@ -134,9 +133,8 @@ class MovableCharacter
 				break;
 			}
 
-			sprite.setPosition(pos);
+			spriteAnimated.update(pos, Direction(dir));					//Call update to run animation.
 			// LOG_DEBUG("Speed: %f, %f", speed.x, speed.y);
-		// /	spriteAnimated.update(pos, dir);					//Call update to run animation.
 		}
 
 
@@ -222,7 +220,7 @@ class MovableCharacter
 
 			move();												//Change position and update sprite.
 
-			LOG_DEBUG("Pacmans position: %f, %f.", pos.x, pos.y);
+			// LOG_DEBUG("Pacmans position: %f, %f.", pos.x, pos.y);
 
 			//Checks if character has entered a new tile:
 			if(abs(desTPos.x - pos.x) < level.retTSize().x/2.0f && abs(desTPos.y - pos.y) < level.retTSize().y/2.0f)
@@ -230,10 +228,10 @@ class MovableCharacter
 				tileID = level.findNextTile(tileID, dir);		//Sets new current-tile.
 																//Updates position of destination-tile:
 				desTPos = level.getTilePos(level.findNextTile(tileID, dir));
-				LOG_DEBUG("Entered a new tile.");
+				// LOG_DEBUG("Entered a new tile.");
 			}
 
-			LOG_DEBUG("Distance between pacman and its tile: %f, %f. Tolerence values are: %f, %f", abs(tPos.x - pos.x), abs(tPos.y - pos.y), level.retTolerance().x, level.retTolerance().y);
+			// LOG_DEBUG("Distance between pacman and its tile: %f, %f. Tolerence values are: %f, %f", abs(tPos.x - pos.x), abs(tPos.y - pos.y), level.retTolerance().x, level.retTolerance().y);
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
 			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
@@ -249,22 +247,22 @@ class MovableCharacter
 							break;
 					}
 					level.setTileType(tileID, empty);			//Empty that tile as Pacman has just picked up item.
-					LOG_DEBUG("Entered center of non-empty tile.");
+					// LOG_DEBUG("Entered center of non-empty tile.");
 				}
-				LOG_DEBUG("Entered center of new tile.");
+				// LOG_DEBUG("Entered center of new tile.");
 			}
 			//LOG_DEBUG("Distance between pacman and its tile: %f, %f", abs(tPos.x - pos.x), abs(tPos.y - pos.y));
 			//If character is not within the tolerance value if its current-tile, set bool inTileCenter to false:
 			if(abs(tPos.x - pos.x) > level.retTolerance().x || abs(tPos.y - pos.y) > level.retTolerance().y)											//Not within tolerance-values.
 			{
 				inTileCenter = false;
-				LOG_DEBUG("inTileCenter set to false!");
+				// LOG_DEBUG("inTileCenter set to false!");
 			}
 		}
 
 		void draw()
 		{
-			sprite.draw();
+			spriteAnimated.draw();
 		}
 
 };

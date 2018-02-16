@@ -120,10 +120,10 @@ class Sprite																	//Is base-class for spriteAnimation.
 		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
 
 			GLfloat vertices[] = {
-				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top
-				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV[2], 	UV[1], 	// Right 	Top
-				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV[0], 	UV[3],	// Left 	Bottom
-				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV[2], 	UV[3] 	// Right 	Bottom
+				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y, 	// Left 	Top
+				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y, 	// Right 	Top
+				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w,	// Left 	Bottom
+				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);

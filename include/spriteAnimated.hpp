@@ -9,6 +9,7 @@
 #include "constants.h"
 #include "sprite.hpp"
 
+extern float dt;
 
 class SpriteAnimated : public Sprite
 {
@@ -23,6 +24,10 @@ class SpriteAnimated : public Sprite
 		Animation index;
 
 	public:
+
+		SpriteAnimated() = default;
+
+		SpriteAnimated& operator =(const SpriteAnimated& other) = default;
 
 		SpriteAnimated(glm::vec2 worldPos, glm::vec2 animationSize, Animation animationIndex) : Sprite(worldPos, animationSize, Texture(animationIndex))
 		{
@@ -46,43 +51,45 @@ class SpriteAnimated : public Sprite
 
 		}
 
-		void update(Direction dir)
+		void update(glm::vec2 pos_, Direction dir)
 		{
+			setPosition(pos_);
 			direction = dir;
-																				//Update the frame if its time:
-			if(timeLeft < 0)
+			timeLeft -= dt;																//Update the frame if its time:
+
+			if(timeLeft > 0)
 			{																	//If time to switch frame:
 				currentFrame += reversed;										//Increment frame count. Or decrement if reversed order.
-				if(currentFrame == frameCount || currentFrame == 0)
+				if(currentFrame == frameCount-1 || currentFrame == 0)
 				{
 					reversed *= -1;
 				}
 				timeLeft = frameDelay;											//Reset countdown.
+				LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
+				 				frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
+
 			}
 		}
 
 		void draw()
 		{
+			glBindVertexArray(vao);
 
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(pacSheet));		//1 Since pacman.png is texture no 1.
+			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
-		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(1, 4, 4);
-
-			LOG_DEBUG("Pos: %f, %f - %f, %f", pos.x, pos.y, pos.x + size.x, pos.y + size.y);
-
-
+		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, 4, 4);
+			LOG_DEBUG("FrameCount: %d UV: %f, %f, %f, %f", currentFrame, UV.x, UV.y, UV.z, UV.w);
 			GLfloat vertices[] = {
-				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV[0], 	UV[1], 	// Left 	Top
-				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV[2], 	UV[1], 	// Right 	Top
-				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV[0], 	UV[3],	// Left 	Bottom
-				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV[2], 	UV[3] 	// Right 	Bottom
+				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y, 	// Left 	Top
+				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y, 	// Right 	Top
+				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w,	// Left 	Bottom
+				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
-			LOG_DEBUG("Echo");
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-//
-			LOG_DEBUG("Foxtrot");
+
 
 
 			GLuint elements[] = {
@@ -92,9 +99,7 @@ class SpriteAnimated : public Sprite
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 			glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(elements), elements);
-			LOG_DEBUG("Golf");
 
-			resourceManager.loadShaderAttributes();
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid*)0);
 		}
