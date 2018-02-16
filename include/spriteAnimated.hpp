@@ -49,12 +49,50 @@ class SpriteAnimated : public Sprite
 
 		}
 
+		// int fixDir(Direction dir)
+		// {
+		// 	dir = Direction(int(dir) -1);
+		// 	return (int(dir)%4)+1;												//Rotates the direction. So 1 becomes 2
+		// }																		//2 becomes 3, 3 becomes 4, and 4 becomes 1.
+		// 																		//also converts to int.
+        //
+
+
+		float fixDir(Direction dir)												//Rotates the direction. So 1 becomes 2
+		{																		//2 becomes 3, 3 becomes 4, and 4 becomes 1.
+			switch (dir)														//also converts to int.
+			{
+				case down:
+					return 0;
+					break;
+
+				case up:
+					return 1;
+					break;
+
+				case left:
+					return 2;
+					break;
+
+				case right:
+					return 3;
+					break;
+
+				default:
+					return 1;
+					break;
+			}
+		}
+
 		void update(glm::vec2 pos_, Direction dir)
 		{
 			setPosition(pos_);
 			direction = dir;
 
-			timeLeft -= dt;																//Update the frame if its time:
+			if (direction)														//If standing still, dont progress animation.
+			{
+				timeLeft -= dt;																//Update the frame if its time:
+			}
 
 			if(timeLeft <= 0)
 			{																	//If time to switch frame:
@@ -79,10 +117,10 @@ class SpriteAnimated : public Sprite
 		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, 4, 4);
 			LOG_DEBUG("FrameCount: %d UV: %f, %f, %f, %f", currentFrame, UV.x, UV.y, UV.z, UV.w);
 			GLfloat vertices[] = {
-				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y, 	// Left 	Top
-				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y, 	// Right 	Top
-				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w,	// Left 	Bottom
-				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w 	// Right 	Bottom
+				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y + (0.25f * fixDir(direction)), 	// Left 	Top
+				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y + (0.25f * fixDir(direction)), 	// Right 	Top
+				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w + (0.25f * fixDir(direction)),	// Left 	Bottom
+				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w + (0.25f * fixDir(direction)) 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
