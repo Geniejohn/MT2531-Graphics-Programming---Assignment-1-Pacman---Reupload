@@ -185,12 +185,16 @@ class MovableCharacter
 			//LOG_DEBUG("Pos: %f, %f", pos.x, pos.y);
 			tPos = level.getTilePos(tileID);					//Updates position of current tile.
 
-			//Can change direction, traversable tile in desired direction:
-			if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, desiredDir)) == true)
+			if(desiredDir != dir)
 			{
-				//Snaps to tile before changing direction:
-				pos = tPos;
-				changeDir();
+				//Can change direction, traversable tile in desired direction:
+				if(inTileCenter == true && level.isTileEmpty(level.findNextTile(tileID, desiredDir)) == true)
+				{
+					//Snaps to tile before changing direction:
+					pos = tPos;
+					changeDir();
+					desTPos = level.getTilePos(level.findNextTile(tileID, dir));
+				}
 			}
 
 			//Character in center of tile and cannot continue moving in same direction:
