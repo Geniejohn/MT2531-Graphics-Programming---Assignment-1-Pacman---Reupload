@@ -14,7 +14,7 @@ extern float dt;												//DeltaTime.
 class MovableCharacter
 {
 	private:
-		Texture type;												//Enum for character-type.
+		Character charType;												//Enum for character-type.
 		glm::vec2 speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
@@ -36,15 +36,15 @@ class MovableCharacter
 		MovableCharacter& operator =(const MovableCharacter& other) = default;
 
 
-		MovableCharacter(int Id, glm::vec2 sheetSize, int frameCount, float animationSpeed, Texture typ, glm::vec2 s)
+		MovableCharacter(int Id, Character cType, glm::vec2 sheetSize, int frameCount, float animationSpeed, Texture tex, glm::vec2 s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
-			type = typ;
+			charType = cType;
 			speed = s;
 			pos = level.getTilePos(tileID);
 																//Creates new sprite of wanted type:
-			spriteAnimated = SpriteAnimated(pos, level.retTSize(),sheetSize, frameCount, animationSpeed, type);
+			spriteAnimated = SpriteAnimated(pos,level.retTSize(), sheetSize, frameCount, animationSpeed, tex);
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.
@@ -62,7 +62,7 @@ class MovableCharacter
 
 		int retType()
 		{
-			return type;
+			return charType;
 		}
 
 
@@ -232,7 +232,8 @@ class MovableCharacter
 			{
 				inTileCenter = true;
 																//Pacman enters tile with item to pick up:
-				if(type == pacman && level.retTileType(tileID) != empty)
+				// LOG_DEBUG("reTileType %d == empty %d, type %d == pacman: %d", level.retTileType(tileID), empty, type, pacman);
+				if(charType == pacman && level.retTileType(tileID) != empty)
 				{
 					switch (level.retTileType(tileID))			//Checks for item-type.
 					{
