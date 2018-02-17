@@ -62,6 +62,7 @@ class Pacman : public MovableCharacter
 			}
 			else												//Game-over.
 			{
+				LOG_DEBUG("Game over.");
 			//	gameUI.gameOver();
 			}
 		}
