@@ -14,10 +14,11 @@ extern float dt;												//DeltaTime.
 class MovableCharacter
 {
 	private:
-		Animation type;												//Enum for character-type.
+		Animation type;											//Enum for character-type.
 		glm::vec2 speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
+		bool firstChoice;
 
 	protected:
 		glm::vec2 pos;
@@ -165,8 +166,9 @@ class MovableCharacter
 		bool canTurn()
 		{
 			//Tile to the relative right or relative left is traversable:
-			if(	 level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir,  1))) == true
-			  || level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir, -1))) == true)
+			if(	(level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir, 1))) == true
+			  || level.isTileEmpty(level.findNextTile(tileID, cycleDir(desiredDir, 0))) == true)
+		  	  && firstChoice == true)
 			{
 				return true;
 			}
@@ -230,6 +232,7 @@ class MovableCharacter
 			//Character is within the tolerance-value, and is concidered within the center of its current tile:
 			if(abs(tPos.x - pos.x) < level.retTolerance().x && abs(tPos.y - pos.y) < level.retTolerance().y && inTileCenter == false)
 			{
+				firstChoice = true;
 				inTileCenter = true;
 																//Pacman enters tile with item to pick up:
 				if(type == pacman && level.retTileType(tileID) != empty)
@@ -250,6 +253,7 @@ class MovableCharacter
 			if(abs(tPos.x - pos.x) > level.retTolerance().x || abs(tPos.y - pos.y) > level.retTolerance().y)											//Not within tolerance-values.
 			{
 				inTileCenter = false;
+				firstChoice = false;
 			}
 		}
 

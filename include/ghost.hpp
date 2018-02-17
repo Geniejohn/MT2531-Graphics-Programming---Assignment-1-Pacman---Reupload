@@ -6,6 +6,7 @@
 #include "cmath"												// abs()
 #include "logger.h"
 #include "pacman.hpp"
+#include <cstdlib>
 
 extern Level level;
 extern Pacman player;
@@ -60,10 +61,22 @@ class Ghost : public MovableCharacter
 				}
 			}
 
+			int randN = (rand()%2);								//Random number, either 0 or 1.
+
+			//1/3rd chance to cycle choice once, 1/9 twice, etc.
+			while (rand()%3 == 1)
+			{
+																//Cycle choice clockwise if randN == 1,
+																//Counter-clockwise if randN == 0
+				choice = MovableCharacter::cycleDir(choice, randN);
+			}
+
 			//Next tile in that direction is not traversable:
 			while (level.isTileEmpty(level.findNextTile(MovableCharacter::tileID, choice)) == false)
 			{
-				choice = MovableCharacter::cycleDir(choice, 1);	//Cycle choice direction clockwise.
+																//Cycle choice clockwise if randN == 1,
+																//Counter-clockwise if randN == 0
+				choice = MovableCharacter::cycleDir(choice, randN);
 				LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
 			}
 
