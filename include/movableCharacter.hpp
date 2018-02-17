@@ -194,6 +194,7 @@ class MovableCharacter
 			}
 		}
 
+
 		//Each frame, after input possibly changes desiredDir, do:
 		void update()
 		{
@@ -235,7 +236,7 @@ class MovableCharacter
 			{
 				firstChoice = true;
 				inTileCenter = true;
-				if(charType == pacman)								//Is Pacman.
+				if(charType == pacman)							//Is Pacman.
 				{
 					if(level.retTileType(tileID) != empty)		//Tile entered is empty.
 					{
@@ -247,7 +248,7 @@ class MovableCharacter
 							break;
 						}
 						level.setTileType(tileID, empty);		//Empty that tile as Pacman has just picked up item.
-						// LOG_DEBUG("Entered center of non-empty tile.");
+						//LOG_DEBUG("Entered center of non-empty tile.");
 					}
 
 																//Gets vector with warp-ID's.
@@ -260,8 +261,9 @@ class MovableCharacter
 							pos = level.getTilePos(tileID);		//Sets position to next warp in cycle.
 
 																//Updates position of destination-tile:
+							desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 
-																//Next tile afte warp is not traversable.
+																//Next tile after warp is not traversable.
 							if(level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
 							{
 								//While our direction leads to a wall:
@@ -277,7 +279,6 @@ class MovableCharacter
 								desiredDir = still;
 								dir = still;
 							}
-							desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 						}
 					}
 				}
@@ -292,6 +293,7 @@ class MovableCharacter
 				firstChoice = false;
 			}
 		}
+
 
 		void draw()
 		{
