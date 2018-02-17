@@ -125,7 +125,10 @@ class ResourceManager
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-			glClearColor(1,1,1,1);												//The background color for the window.
+			glClearColor(	BACKGROUND_COLOR.x,
+							BACKGROUND_COLOR.y,
+							BACKGROUND_COLOR.z,
+							BACKGROUND_COLOR.w);												//The background color for the window.
 
 
 
