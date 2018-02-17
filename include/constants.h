@@ -1,9 +1,23 @@
 #pragma once
+
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
+
+//LEVEL - BASIC TYPES:
+const char LEVEL_WALL = '#';
+const char LEVEL_EMPTY = '-';
+const char LEVEL_PACMAN = 'P';
+const char LEVEL_GHOST = 'G';
+const char LEVEL_WARP = 'W';
+
+//LEVEL - PICKUPS:
+const char LEVEL_PELLET = '.';
+
+
+const int SCORE_PELLET = 10;
+
 const int GHOST_AMOUNT = 4;
 const int STARTING_LIVES = 3;
-const int SCORE_PELLET = 10;
 
 const float HORIZONTAL_GAMESPACE = 0.7f;		//Proportion of window containing the game.
 const float VERTICAL_GAMESPACE = 0.9f;			//Proportion of window containing the game.

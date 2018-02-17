@@ -55,16 +55,14 @@ class Level
 				LOG_DEBUG("k: %d'", numberOfTiles);
 
 
-				int tempID;
+				char tempID;
 				tSize = glm::vec2((2*HORIZONTAL_GAMESPACE)/float(mapWidth), (2*VERTICAL_GAMESPACE)/float(mapHeight));
 				LOG_DEBUG("tSize calculated: %f, %f", tSize.x, tSize.y);
 				float xPos, yPos;
 
 				for (int i = 0; i < numberOfTiles; i++) 		//Reads level-file and creates tiles.
 				{
-					tempID = 0;
 					reader >> tempID;
-
 																//'1-HORIZONTAL_GAMESPACE = Padding.
 																//'i%mapWidth' gives number for that row.
 																//Formula: Borderpos + padding + increment.
@@ -72,30 +70,46 @@ class Level
 					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
 					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
-					if(tempID == 7)								//ID for Pacman->Pacman's starting position.
+					switch (tempID)
 					{
-						pacmanSpawnTileID = i;					//Saving index of tile to variable.
-						//Add new tile to index 'i' in tiles-vector.
-						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
-					}
-					else if(tempID == 8)						//ID for warp.
-					{
-						//Add new tile to index 'i' in tiles-vector.
-						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
-						warps.push_back(i);						//Save the tile-ID in warps-vector.
-					}
-					else if(tempID == 6)						//ID for ghost.
-					{
-						//Add new tile to index 'i' in tiles-vector.
-						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
-						ghosts.push_back(i);						//Save the tile-ID in ghosts-vector.
-					}
-					else
-					{
-						//Add new tile to index 'i' in tiles-vector.
-						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, Texture(tempID)));
-					}
+						case LEVEL_WALL:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, wall));
+							break;
 
+						case LEVEL_EMPTY:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+							break;
+
+						case LEVEL_PELLET:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
+							break;
+
+						case LEVEL_PACMAN:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+							pacmanSpawnTileID = i;				//Saving index of tile to variable.
+							break;
+
+						case LEVEL_GHOST:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
+							ghosts.push_back(i);				//Save the tile-ID in ghosts-vector.
+							break;
+
+						case LEVEL_WARP:
+							//Add new tile to index 'i' in tiles-vector.
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+							warps.push_back(i);						//Save the tile-ID in warps-vector.
+							break;
+
+						default:
+							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
+							LOG_DEBUG("Unknown character in file!");
+							break;
+					}
 
 				}
 				LOG_DEBUG("Loop has ended");
