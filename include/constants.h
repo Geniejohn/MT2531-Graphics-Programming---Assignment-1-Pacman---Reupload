@@ -12,6 +12,7 @@ const float CENTER_TOLERANCE = 0.1f;			//Tolereance for character snap to center
 const float GHOST_SPEED = 4.4f;
 const float PACMAN_SPEED = 4.5f;
 const float WARP_CD = 0.1f;						//Warp cooldown in seconds.
+const float INVINCIBILITY_CD = 1.5f;			//Invincibility cooldown in seconds.
 //Frame updates per second.
 const float PACMAN_ANIMATION_SPEED = 10;
 const float GHOST_ANIMATION_SPEED = 3;
