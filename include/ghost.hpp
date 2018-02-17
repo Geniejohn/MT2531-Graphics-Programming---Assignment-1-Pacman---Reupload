@@ -97,7 +97,7 @@ class Ghost : public MovableCharacter
 
 		void update()
 		{
-			glm::vec2 diff = findDirDiff();	
+			glm::vec2 diff = findDirDiff();
 			//Ghost closer to Pacman than a tile:
 			if(abs(diff.x) < level.retTSize().x && abs(diff.y) < level.retTSize().y)
 			{
