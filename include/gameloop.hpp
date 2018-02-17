@@ -34,7 +34,7 @@ class GameLoop
 
 		void makeSprites()
 		{
-			player = Pacman(478);												//478 Start on the 0x17th tile.
+			player = Pacman(level.retStartTileID());			//Start-tile to read from level-file.
 			ghosts[0] = Ghost(113);
 			ghosts[1] = Ghost(114);
 			ghosts[2] = Ghost(115);
@@ -52,7 +52,7 @@ class GameLoop
 			ghosts[1].update();
 			ghosts[2].update();
 			ghosts[3].update();
-			
+
 			level.draw();
 			player.draw();
 			ghosts[0].draw();

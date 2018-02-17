@@ -27,6 +27,7 @@ class Level
 		int numberOfTiles;
  		std::vector<Tile> tiles;								//Pointer for tile-array.
 		std::vector<int> warps;
+		int pacmanSpawnTileID;
 
 
 	public:
@@ -72,6 +73,7 @@ class Level
 
 					if(tempID == 7)								//ID for Pacman->Pacman's starting position.
 					{
+						pacmanSpawnTileID = i;					//Saving index of tile to variable.
 						//Add new tile to index 'i' in tiles-vector.
 						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
 					}
@@ -111,6 +113,11 @@ class Level
 
 		}
 
+
+		int retStartTileID()
+		{
+			return pacmanSpawnTileID;
+		}
 
 		//Returns the type of the tile with the given ID:
 		Texture retTileType(int ID)
