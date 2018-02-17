@@ -18,7 +18,7 @@ const char LEVEL_PELLET = '.';
 
 const int SCORE_PELLET = 10;
 
-const int SCORE_DIGITS = 5; 	//99999 is max score if this is 5.
+const int SCORE_DIGITS = 5; 	//999.999 is max score if this is 5.
 
 const int GHOST_AMOUNT = 4;
 const int STARTING_LIVES = 3;

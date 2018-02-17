@@ -18,7 +18,7 @@ class GameUI
 
 		void startup()
 		{
-			scoreCounter = Counter(glm::vec2(0, 0.7f), glm::vec2(33,30));
+			scoreCounter = Counter(glm::vec2(0, 0.85f), glm::vec2(0.08f,0.08f));
 		}
 
 		void increaseScore(int increase)
