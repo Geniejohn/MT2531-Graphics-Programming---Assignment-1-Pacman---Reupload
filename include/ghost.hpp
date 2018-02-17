@@ -39,13 +39,6 @@ class Ghost : public MovableCharacter
 			int choice = 1;										//Default.
 			glm::vec2 diff = findDirDiff();						//Try moving towards Pacman first.
 
-			//Ghost closer to packman than a tile:
-			if(diff.x < level.retTSize().x && diff.y < level.retTSize().y)
-			{
-				player.die();									//Kill Pacman.
-				diff = findDirDiff();							//Get new diff-vector after Pacman-respawn.
-				LOG_DEBUG("Killed Pacman!");
-			}
 			if((abs(diff.x)-abs(diff.y)) > 0.0f)				//Diff on y-axis is smallets.
 			{
 				if(diff.x < 0.0f)								//Pacman to the left.
@@ -104,11 +97,21 @@ class Ghost : public MovableCharacter
 
 		void update()
 		{
+			glm::vec2 diff = findDirDiff();
+			//Ghost closer to Pacman than a tile:
+			if(abs(diff.x) < level.retTSize().x && abs(diff.y) < level.retTSize().y)
+			{
+				player.die();									//Kill Pacman.
+				diff = findDirDiff();							//Get new diff-vector after Pacman-respawn.
+				LOG_DEBUG("Killed Pacman!");
+			}
+
 			//Come to a stop or is able to make 90 degree turn:
 			if(MovableCharacter::dir == still || MovableCharacter::canTurn() == true)
 			{
 				MovableCharacter::desiredDir = makeChoice();	//Change direction.
 			}
+
 
 			MovableCharacter::update();
 		}
