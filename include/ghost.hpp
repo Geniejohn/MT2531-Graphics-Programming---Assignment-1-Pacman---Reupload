@@ -77,7 +77,7 @@ class Ghost : public MovableCharacter
 																//Cycle choice clockwise if randN == 1,
 																//Counter-clockwise if randN == 0
 				choice = MovableCharacter::cycleDir(choice, randN);
-				LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
+				//LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
 			}
 
 			//Choice should now lead to traversable tile.

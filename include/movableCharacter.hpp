@@ -228,6 +228,10 @@ class MovableCharacter
 			{
 				tileID = level.findNextTile(tileID, dir);		//Sets new current-tile.
 																//Updates position of destination-tile:
+				if(tileID == level.retStartTileID())
+				{
+					LOG_DEBUG("Entered spawn-tile, ID: %d. Direction: %d, next tileID: %d", tileID, dir, level.findNextTile(tileID, dir));
+				}
 				desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 			}
 
@@ -259,8 +263,11 @@ class MovableCharacter
 						{
 							tileID = warps[(i+1)%(warps.size())];
 							pos = level.getTilePos(tileID);		//Sets position to next warp in cycle.
+							LOG_DEBUG("Position after warp: %f, %f", pos.x, pos.y);
 
-																//Updates position of destination-tile:
+							//Updates position of destination-tile:
+							int tempI = level.findNextTile(tileID, dir);
+							LOG_DEBUG("tileID: %d, direciton: %d, next tileID: %d", tileID, dir, tempI);
 							desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 
 																//Next tile after warp is not traversable.
@@ -273,6 +280,7 @@ class MovableCharacter
 								}
 								//Now dir leads to a traversable tile,
 								//set destination position to that one:
+								LOG_DEBUG("Hit a wall, so setting dir to still.");
 								desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 
 								//Sets to still as to not confuse player.
@@ -281,6 +289,7 @@ class MovableCharacter
 							}
 						}
 					}
+					tPos = level.getTilePos(tileID);
 				}
 																//Pacman enters tile with item to pick up:
 				// LOG_DEBUG("Entered center of new tile.");
