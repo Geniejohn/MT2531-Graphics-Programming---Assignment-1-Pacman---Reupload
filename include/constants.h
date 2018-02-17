@@ -13,18 +13,13 @@ const float GHOST_SPEED = 4.4f;
 const float PACMAN_SPEED = 4.5f;
 //Frame updates per second.
 const float PACMAN_ANIMATION_SPEED = 10;
-const float GHOST_ANIMATION_SPEED = 1;
+const float GHOST_ANIMATION_SPEED = 3;
 
 
 const int TEXTURE_COUNT = 6;					//The total number of textures that will be loaded.
 enum Texture : int								//The different textrues a static sprite can have.
 {
  	pellet, wall, empty, test, pacSheet, ghostSheet, upgrade,
-};
-
-enum Animation									//The different sprite sheet animations in the game.
-{
-	pacmanAnimation, ghostAnimation,
 };
 
 enum Character

@@ -23,7 +23,7 @@ extern float dt;
 // extern GLuint vao;																//Vertex array with the 4 verticies.
 
 
-class Sprite																	//Is base-class for spriteAnimation.
+class Sprite																	//Is base-class for spriteTexture.
 {
 	private:
 		Texture index;															//Tell the sprite what texture it's using.

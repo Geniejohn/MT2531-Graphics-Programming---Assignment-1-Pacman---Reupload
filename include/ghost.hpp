@@ -22,7 +22,7 @@ class Ghost : public MovableCharacter
 
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Ghost(int Id) : MovableCharacter(Id, ghostAnimation, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().y))
+		Ghost(int Id) : MovableCharacter(Id, ghost, glm::vec2(2, 4), 2, GHOST_ANIMATION_SPEED, ghostSheet, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().y))
 		{
 
 		}
@@ -88,6 +88,7 @@ class Ghost : public MovableCharacter
 		//Return a vector equal to the difference in positon between ghost and pacman:
 		glm::vec2 findDirDiff()
 		{
+			// LOG_DEBUG("Differenc between ghost and pacman: %f, %f", MovableCharacter::tPos.x + player.retTilePos().x, MovableCharacter::tPos.y + player.retTilePos().y);
 			return glm::vec2(player.retTilePos().x - MovableCharacter::tPos.x,
 							 player.retTilePos().y - MovableCharacter::tPos.y);
 		}
