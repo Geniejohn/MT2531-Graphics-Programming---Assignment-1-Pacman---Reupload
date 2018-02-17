@@ -38,9 +38,17 @@ class Ghost : public MovableCharacter
 		{
 			int choice = 1;										//Default.
 			glm::vec2 diff = findDirDiff();						//Try moving towards Pacman first.
-			if((abs(diff[0])-abs(diff[1])) > 0.0f)				//Diff on y-axis is smallets.
+
+			//Ghost closer to packman than a tile:
+			if(diff.x < level.retTSize().x && diff.y < level.retTSize().y)
 			{
-				if(diff[0] < 0.0f)								//Pacman to the left.
+				player.die();									//Kill Pacman.
+				diff = findDirDiff();							//Get new diff-vector after Pacman-respawn.
+				LOG_DEBUG("Killed Pacman!");
+			}
+			if((abs(diff.x)-abs(diff.y)) > 0.0f)				//Diff on y-axis is smallets.
+			{
+				if(diff.x < 0.0f)								//Pacman to the left.
 				{
 					choice = left;
 				}
@@ -51,7 +59,7 @@ class Ghost : public MovableCharacter
 			}
 			else												//Closest to Pacman on x-axis.
 			{
-				if(diff[1] < 0.0f)								//Pacman below.
+				if(diff.y < 0.0f)								//Pacman below.
 				{
 					choice = down;
 				}
@@ -77,7 +85,7 @@ class Ghost : public MovableCharacter
 																//Cycle choice clockwise if randN == 1,
 																//Counter-clockwise if randN == 0
 				choice = MovableCharacter::cycleDir(choice, randN);
-				LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
+				//LOG_DEBUG("Cycling choice in Ghost.");			//Discover if loop is infinite.
 			}
 
 			//Choice should now lead to traversable tile.
@@ -89,8 +97,8 @@ class Ghost : public MovableCharacter
 		glm::vec2 findDirDiff()
 		{
 			// LOG_DEBUG("Differenc between ghost and pacman: %f, %f", MovableCharacter::tPos.x + player.retTilePos().x, MovableCharacter::tPos.y + player.retTilePos().y);
-			return glm::vec2(player.retTilePos().x - MovableCharacter::tPos.x,
-							 player.retTilePos().y - MovableCharacter::tPos.y);
+			return glm::vec2(player.retPos().x - MovableCharacter::pos.x,
+							 player.retPos().y - MovableCharacter::pos.y);
 		}
 
 

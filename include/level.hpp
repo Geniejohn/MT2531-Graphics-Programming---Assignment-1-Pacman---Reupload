@@ -27,6 +27,7 @@ class Level
 		int numberOfTiles;
  		std::vector<Tile> tiles;								//Pointer for tile-array.
 		std::vector<int> warps;
+		std::vector<int> ghosts;
 		int pacmanSpawnTileID;
 
 
@@ -83,6 +84,12 @@ class Level
 						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
 						warps.push_back(i);						//Save the tile-ID in warps-vector.
 					}
+					else if(tempID == 6)						//ID for ghost.
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
+						ghosts.push_back(i);						//Save the tile-ID in ghosts-vector.
+					}
 					else
 					{
 						//Add new tile to index 'i' in tiles-vector.
@@ -123,6 +130,12 @@ class Level
 		std::vector<int> retWarpVector()
 		{
 			return warps;
+		}
+
+
+		std::vector<int> retGhostVector()
+		{
+			return ghosts;
 		}
 
 
@@ -168,12 +181,14 @@ class Level
 		}
 
 
+//Entered spawn-tile, ID: 477. Direction: left, next tileID: -1
+
 		//Finds adjecant tile, returns -1 if no tile in that direction, -2 if dir is out of range:
-		int findNextTile(int ID, int dir)						//‘dir’: 0=left, 1=up, 2=right, 3=down.
+		int findNextTile(int ID, int dir)						//‘dir’: 1=left, 2=up, 3=right, 4=down.
 		{
 			switch(dir)
 			{
-			case left: if(ID%mapWidth != 1)						//Not on the left map edge.
+			case left: if(ID%mapWidth != 0)						//Not on the left map edge.
 					{
 						return (ID-1);
 					}
@@ -189,7 +204,7 @@ class Level
 					{
 						return -1;								//No tile above.
 					}
-			case right: if(ID%mapWidth != 0)					//Not on the rigth map edge.
+			case right: if(ID%mapWidth != mapWidth-1)			//Not on the rigth map edge.
 					{
 						return (ID+1);
 					}

@@ -8,12 +8,13 @@
 #include "level.hpp"
 #include "pacman.hpp"
 #include "ghost.hpp"
+#include <vector>
 
 ResourceManager resourceManager;
 InputManager inputManager;
 GameLoop gameLoop;
 Pacman player;
-Ghost ghosts[4];
+std::vector<Ghost> ghosts;										//Vector to hold ghosts.
 
 
 Level level;
