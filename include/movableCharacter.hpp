@@ -6,8 +6,10 @@
 #include "level.hpp"
 #include "pacman.hpp"
 #include <vector>
+#include "gameUI.hpp"
 
 extern Level level;
+extern GameUI gameUI;
 extern float dt;												//DeltaTime.
 // extern GameUI gameUI;
 
@@ -247,12 +249,19 @@ class MovableCharacter
 						switch (level.retTileType(tileID))		//Checks for item-type.
 						{
 							case pellet:						//If pellet.
-							//gameUI.addScore(SCORE_PELLET);	//Add pellet-score to score total.
+								//gameUI.addScore(SCORE_PELLET);	//Add pellet-score to score total.
+
 							default:
 							break;
 						}
 						level.setTileType(tileID, empty);		//Empty that tile as Pacman has just picked up item.
-						//LOG_DEBUG("Entered center of non-empty tile.");
+
+						if(level.retItemsRemaining() < 1)		//Last item got picked up.
+						{
+							//REMOVE UI
+							//SHOW WINSCREEN -> SHOW STATS, WAIT FOR INPUT -> MAIN MENU
+							//gameUI.
+						}
 					}
 				}
 

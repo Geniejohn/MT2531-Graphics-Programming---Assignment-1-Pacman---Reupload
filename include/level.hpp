@@ -25,6 +25,7 @@ class Level
 		int mapWidth;
 		int mapHeight;
 		int numberOfTiles;
+		int itemsRemaining;										//When it reaches zero, the player wins.
  		std::vector<Tile> tiles;								//Pointer for tile-array.
 		std::vector<int> warps;
 		std::vector<int> ghosts;
@@ -43,6 +44,8 @@ class Level
 			level = "./levels/level" + std::to_string(lvl);		//Dynamic string to load levels dynamically.
 
 			std::ifstream reader(level);						//Creates ifstream to read level-file.
+
+			itemsRemaining = 0;
 
 			if(reader)											//Found the file.
 			{
@@ -87,6 +90,7 @@ class Level
 						case LEVEL_PELLET:
 							//Add new tile to index 'i' in tiles-vector.
 							tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
+							itemsRemaining ++;					//Counts score you need to win.
 							break;
 
 						case LEVEL_PACMAN:
@@ -268,6 +272,12 @@ class Level
 		glm::vec2 retTolerance()
 		{
 			return glm::vec2(cToleranceX, cToleranceY);
+		}
+
+
+		int retItemsRemaining()
+		{
+			return itemsRemaining;
 		}
 
 
