@@ -119,6 +119,13 @@ class Level
 			return pacmanSpawnTileID;
 		}
 
+
+		std::vector<int> retWarpVector()
+		{
+			return warps;
+		}
+
+
 		//Returns the type of the tile with the given ID:
 		Texture retTileType(int ID)
 		{
