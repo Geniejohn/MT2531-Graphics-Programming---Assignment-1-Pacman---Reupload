@@ -244,6 +244,7 @@ class MovableCharacter
 				{
 					if(level.retTileType(tileID) != empty)		//Tile entered is empty.
 					{
+						//Pacman enters tile with item to pick up:
 						switch (level.retTileType(tileID))		//Checks for item-type.
 						{
 							case pellet:						//If pellet.
@@ -254,45 +255,42 @@ class MovableCharacter
 						level.setTileType(tileID, empty);		//Empty that tile as Pacman has just picked up item.
 						//LOG_DEBUG("Entered center of non-empty tile.");
 					}
+				}
 
-																//Gets vector with warp-ID's.
-					std::vector<int> warps = level.retWarpVector();
-					for (int i = 0; i < warps.size(); i++)
+				std::vector<int> warps = level.retWarpVector();					//Gets vector with warp-ID's.
+				for (int i = 0; i < warps.size(); i++)
+				{
+					if(tileID == warps[i])					//We entered a warp-tile.
 					{
-						if(tileID == warps[i])					//We entered a warp-tile.
-						{
-							tileID = warps[(i+1)%(warps.size())];
-							pos = level.getTilePos(tileID);		//Sets position to next warp in cycle.
-							LOG_DEBUG("Position after warp: %f, %f", pos.x, pos.y);
+						tileID = warps[(i+1)%(warps.size())];
+						pos = level.getTilePos(tileID);		//Sets position to next warp in cycle.
+						LOG_DEBUG("Position after warp: %f, %f", pos.x, pos.y);
 
-							//Updates position of destination-tile:
-							int tempI = level.findNextTile(tileID, dir);
-							LOG_DEBUG("tileID: %d, direciton: %d, next tileID: %d", tileID, dir, tempI);
+						//Updates position of destination-tile:
+						int tempI = level.findNextTile(tileID, dir);
+						LOG_DEBUG("tileID: %d, direciton: %d, next tileID: %d", tileID, dir, tempI);
+						desTPos = level.getTilePos(level.findNextTile(tileID, dir));
+
+															//Next tile after warp is not traversable.
+						if(level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
+						{
+							//While our direction leads to a wall:
+							while(level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
+							{
+								dir = cycleDir(dir, 1);		//Change direction.
+							}
+							//Now dir leads to a traversable tile,
+							//set destination position to that one:
+							LOG_DEBUG("Hit a wall, so setting dir to still.");
 							desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 
-																//Next tile after warp is not traversable.
-							if(level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
-							{
-								//While our direction leads to a wall:
-								while(level.isTileEmpty(level.findNextTile(tileID, dir)) == false)
-								{
-									dir = cycleDir(dir, 1);		//Change direction.
-								}
-								//Now dir leads to a traversable tile,
-								//set destination position to that one:
-								LOG_DEBUG("Hit a wall, so setting dir to still.");
-								desTPos = level.getTilePos(level.findNextTile(tileID, dir));
-
-								//Sets to still as to not confuse player.
-								desiredDir = still;
-								dir = still;
-							}
+							//Sets to still as to not confuse player.
+							desiredDir = still;
+							dir = still;
 						}
 					}
-					tPos = level.getTilePos(tileID);
 				}
-																//Pacman enters tile with item to pick up:
-				// LOG_DEBUG("Entered center of new tile.");
+				tPos = level.getTilePos(tileID);
 			}
 
 			//If character is not within the tolerance value if its current-tile, set bool inTileCenter to false:
