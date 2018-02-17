@@ -3,6 +3,7 @@ const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 const int GHOST_AMOUNT = 4;
 const int STARTING_LIVES = 3;
+const int MAX_LIVES = STARTING_LIVES +1;
 const int SCORE_PELLET = 10;
 
 const float HORIZONTAL_GAMESPACE = 0.7f;		//Proportion of window containing the game.

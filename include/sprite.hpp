@@ -31,7 +31,8 @@ class Sprite																	//Is base-class for spriteTexture.
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
 		glm::vec2 origin;
-		glm::vec2 sheetPos;														//Holds texture position withing spritesheet.
+		glm::vec2 sheetSize;														//Holds texture position withing spritesheet.
+		int posInSheet;
 
 		GLuint vao;																//Vertex array with the 4 verticies.
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
@@ -63,7 +64,8 @@ class Sprite																	//Is base-class for spriteTexture.
 
 		Sprite& operator =(const Sprite& other) = default;
 
-		Sprite(glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex)	//Constructs the sprite at given pos, with size, uv and texture.
+		Sprite(	glm::vec2 worldPos, glm::vec2 spriteSize, Texture textureIndex,
+			 	glm::vec2 sheetSize_ = glm::vec2(1,1), int texPosInSheet = 0)	//Constructs the sprite at given pos, with size, uv and texture.
 		{
 			//LOG_DEBUG("Creating new Sprite, type: %d", textureIndex);
 			LOG_DEBUG("Constructor start: VBO: %d, EBO: %d", vbo, ebo);
@@ -72,6 +74,8 @@ class Sprite																	//Is base-class for spriteTexture.
 			size = spriteSize;
 			index = textureIndex;
 			//origin = glm::vec2(size.x / 2, size.y / 2);
+			posInSheet = texPosInSheet;
+			sheetSize = sheetSize_;
 
 
 			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
@@ -111,6 +115,11 @@ class Sprite																	//Is base-class for spriteTexture.
 			LOG_DEBUG("Changed Texture!");
 		}
 
+		void setTextruePosition()
+		{
+
+		}
+
 		void draw()
 		{
 			glBindVertexArray(vao);
@@ -118,7 +127,7 @@ class Sprite																	//Is base-class for spriteTexture.
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(index));
 			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
-		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(0, 1, 1);
+		 	glm::vec4 UV = returnUVCoordsFromFrameNumber(posInSheet, sheetSize.x, sheetSize.y);
 
 			GLfloat vertices[] = {
 				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y, 	// Left 	Top

@@ -4,7 +4,7 @@
 #include "constants.h"
 #include "glm/glm/glm.hpp"
 #include "logger.h"
-
+#include <string>
 //Each space in the map except for the walls are tiles:
 class Tile
 {
