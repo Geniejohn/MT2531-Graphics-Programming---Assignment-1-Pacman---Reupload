@@ -27,12 +27,12 @@ class Sprite																	//Is base-class for spriteTexture.
 {
 	private:
 		Texture index;															//Tell the sprite what texture it's using.
+		int posInSheet;
+		glm::vec2 sheetSize;														//Holds texture position withing spritesheet.
 	protected:
 		glm::vec2 pos;															//Holds world position.
 		glm::vec2 size;															//Holds in-world size of the sprite.
 		glm::vec2 origin;
-		glm::vec2 sheetSize;														//Holds texture position withing spritesheet.
-		int posInSheet;
 
 		GLuint vao;																//Vertex array with the 4 verticies.
 		GLuint vbo;																//Vertex buffer object for the 4 vertecies.
@@ -77,7 +77,6 @@ class Sprite																	//Is base-class for spriteTexture.
 			posInSheet = texPosInSheet;
 			sheetSize = sheetSize_;
 
-
 			glGenVertexArrays(1, &vao);	//Must come before makeSprites:
 			glBindVertexArray(vao);
 
@@ -115,13 +114,22 @@ class Sprite																	//Is base-class for spriteTexture.
 			LOG_DEBUG("Changed Texture!");
 		}
 
-		void setTextruePosition()
+		void setTextruePosition(int texPosInSheet)
 		{
-
+			if(texPosInSheet > sheetSize.x * sheetSize.y)
+			{
+				LOG_DEBUG("ERROR: Trying to set position in spritesheet that is bigger than the amount of spirtes in spritesheet.");
+			}
+			else
+			{
+				posInSheet = texPosInSheet;
+			}
 		}
 
 		void draw()
 		{
+			// LOG_DEBUG("Drawing sprite: pos: %f, %f  -  size: %f, %f  -  Sheetsize: %d, %d  - posInSheet: %d",
+			// 			pos.x, pos.y, size.x, size.y, sheetSize.x, sheetSize.y, posInSheet);
 			glBindVertexArray(vao);
 
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(index));
@@ -138,8 +146,6 @@ class Sprite																	//Is base-class for spriteTexture.
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-
-
 
 			GLuint elements[] = {
 				0, 1, 3,

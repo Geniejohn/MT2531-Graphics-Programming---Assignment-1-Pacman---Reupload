@@ -7,6 +7,7 @@
 #include "pacman.hpp"
 #include "inputManager.hpp"
 #include "ghost.hpp"
+#include "gameUI.hpp"
 #include <vector>
 
 extern Level level;
@@ -14,11 +15,12 @@ extern InputManager inputManager;
 extern Pacman player;
 extern std::vector<Ghost> ghosts;
 
+
 class GameLoop
 {
     private:
       bool running;			//True as long as game is running.
-
+	  GameUI gameUI;
 
     public:
         GameLoop()
@@ -33,8 +35,9 @@ class GameLoop
 		}
 
 
-		void makeSprites()
+		void makeSprites(int levelToLoad)
 		{
+			level = Level(levelToLoad);
 			player = Pacman(level.retStartTileID());			//Start-tile to read from level-file.
 
 			std::vector<int> tempV = level.retGhostVector();	//Get vector with tile-ID's for ghosts.
@@ -42,6 +45,8 @@ class GameLoop
 			{
 				ghosts.push_back(tempV[i]);						//Add ghost to vector.
 			}
+
+			gameUI.startup();
 		}
 
 
@@ -62,6 +67,7 @@ class GameLoop
 			{
 				ghosts[i].draw();								//Call draw-function for that ghost.
 			}
+			gameUI.draw();
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();
