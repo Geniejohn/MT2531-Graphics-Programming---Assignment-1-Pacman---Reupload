@@ -7,11 +7,12 @@
 #include "pacman.hpp"
 #include "inputManager.hpp"
 #include "ghost.hpp"
+#include <vector>
 
 extern Level level;
 extern InputManager inputManager;
 extern Pacman player;
-extern Ghost ghosts[];
+extern std::vector<Ghost> ghosts;
 
 class GameLoop
 {
@@ -35,10 +36,12 @@ class GameLoop
 		void makeSprites()
 		{
 			player = Pacman(level.retStartTileID());			//Start-tile to read from level-file.
-			ghosts[0] = Ghost(113);
-			ghosts[1] = Ghost(114);
-			ghosts[2] = Ghost(115);
-			ghosts[3] = Ghost(116);
+
+			std::vector<int> tempV = level.retGhostVector();	//Get vector with tile-ID's for ghosts.
+			for (int i = 0; i < tempV.size(); i++)				//For each ghost read from level-file.
+			{
+				ghosts.push_back(tempV[i]);						//Add ghost to vector.
+			}
 		}
 
 
@@ -48,17 +51,17 @@ class GameLoop
 
 			inputManager.update();
 			player.update();
-			ghosts[0].update();
-			ghosts[1].update();
-			ghosts[2].update();
-			ghosts[3].update();
+			for (int i = 0; i < ghosts.size(); i++)				//For each ghost.
+			{
+				ghosts[i].update();								//Call update-function for that ghost.
+			}
 
 			level.draw();
 			player.draw();
-			ghosts[0].draw();
-			ghosts[1].draw();
-			ghosts[2].draw();
-			ghosts[3].draw();
+			for (int i = 0; i < ghosts.size(); i++)				//For each ghost.
+			{
+				ghosts[i].draw();								//Call draw-function for that ghost.
+			}
 
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();

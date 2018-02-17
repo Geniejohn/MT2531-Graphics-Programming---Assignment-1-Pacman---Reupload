@@ -8,6 +8,7 @@
 #include "level.hpp"
 #include "pacman.hpp"
 #include "ghost.hpp"
+#include <vector>
 
 
 //#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
@@ -16,7 +17,7 @@ ResourceManager resourceManager;
 InputManager inputManager;
 GameLoop gameLoop;
 Pacman player;
-Ghost ghosts[4];
+std::vector<Ghost> ghosts;										//Vector to hold ghosts.
 
 
 Level level;

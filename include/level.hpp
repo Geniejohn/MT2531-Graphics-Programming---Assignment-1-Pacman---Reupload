@@ -27,6 +27,7 @@ class Level
 		int numberOfTiles;
  		std::vector<Tile> tiles;								//Pointer for tile-array.
 		std::vector<int> warps;
+		std::vector<int> ghosts;
 		int pacmanSpawnTileID;
 
 
@@ -83,6 +84,12 @@ class Level
 						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, empty));
 						warps.push_back(i);						//Save the tile-ID in warps-vector.
 					}
+					else if(tempID == 6)						//ID for ghost.
+					{
+						//Add new tile to index 'i' in tiles-vector.
+						tiles.push_back(Tile(i, glm::vec2(xPos, yPos), tSize, pellet));
+						ghosts.push_back(i);						//Save the tile-ID in ghosts-vector.
+					}
 					else
 					{
 						//Add new tile to index 'i' in tiles-vector.
@@ -123,6 +130,12 @@ class Level
 		std::vector<int> retWarpVector()
 		{
 			return warps;
+		}
+
+
+		std::vector<int> retGhostVector()
+		{
+			return ghosts;
 		}
 
 
