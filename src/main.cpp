@@ -9,9 +9,6 @@
 #include "pacman.hpp"
 #include "ghost.hpp"
 
-
-//#define LOG_NO_DEBUG 1															//Determines wether logger.h compiles.
-
 ResourceManager resourceManager;
 InputManager inputManager;
 GameLoop gameLoop;
@@ -30,7 +27,6 @@ int main()
 		return -1;																//Exit with code -1.
 	}
 
-	//player = Pacman(506);												//Start on the 0x17th tile.
 	level = Level(0);
 	gameLoop.makeSprites();
 	LOG_DEBUG("Level created");
@@ -38,26 +34,25 @@ int main()
 
 
 	int nbFrames = 0;
+	double currentTime = 0;
 	double lastTime = glfwGetTime();
 
-    do
-    {
-																				//Measure speed:
-		double currentTime = glfwGetTime();
+	while(true)//MainMenu() returns true. Meaning, we are running another game.
+	{
+	    do
+	    {																			//Measure speed:
+			currentTime = glfwGetTime();
+			nbFrames++;
+			if (currentTime - lastTime >= 1.0) { 								// If last prinf() was more than 1sec ago
+				dt = 1.0 / double(nbFrames);									// printf and reset
+				printf("%f dt\n", dt);
+				nbFrames = 0;
+				lastTime += 1.0;
+			}
+			gameLoop.run();														//The gamloop updates and draws everything game realated.
 
-		nbFrames++;
-		if (currentTime - lastTime >= 1.0) { // If last prinf() was more than 1sec ago
-											 // printf and reset
-			dt = 1.0 / double(nbFrames);
-			printf("%f dt\n", dt);
-			nbFrames = 0;
-			lastTime += 1.0;
-		}
-
-
-		gameLoop.run();
-
-    } while(gameLoop.getRunning());
+	    } while(gameLoop.getRunning());
+	}
 
 	resourceManager.shutdown();
 
