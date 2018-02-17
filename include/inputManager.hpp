@@ -75,6 +75,12 @@ class InputManager
 				LOG_DEBUG("RIGHT!");
 				player.MovableCharacter::changeDesiredDir(right);
 			}
+			state = glfwGetKey(resourceManager.window, GLFW_KEY_ESCAPE)//If user exits:
+			if(state == GLFW_PRESS)
+			{
+				LOG_DEBUG("The user pressed ESC, time to exit game.");
+				gameLoop.endLoop();														//End the gameloop.
+			}
 		}
 
 };

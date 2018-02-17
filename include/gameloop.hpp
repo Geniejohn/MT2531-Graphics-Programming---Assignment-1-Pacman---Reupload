@@ -63,10 +63,6 @@ class GameLoop
 			glfwSwapBuffers(resourceManager.window);
 			glfwPollEvents();
 
-			if(glfwGetKey(resourceManager.window, GLFW_KEY_ESCAPE))								//If user exits:
-			{
-				endLoop();														//End the gameloop.
-			}
 		}
 
 
