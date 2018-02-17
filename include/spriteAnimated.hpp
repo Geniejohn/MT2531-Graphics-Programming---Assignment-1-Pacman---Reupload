@@ -20,22 +20,28 @@ class SpriteAnimated : public Sprite
 		Direction direction;													//What direction is the character faceing.
 		int reversed;															//Is used to reverse the order of the animation, is 1 or -1.
 		Texture index;
+		glm::vec2 sheetSize;
 
+		float cellSize;															//The size of one of the quadratic cell of spritesheet.
+																				//rephrase: By how much is the V texture coord offset downward
+																				//For each of the four directions.
 	public:
 
 		SpriteAnimated() = default;
 
 		SpriteAnimated& operator =(const SpriteAnimated& other) = default;
 
-		SpriteAnimated(glm::vec2 worldPos, glm::vec2 animationSize, glm::vec2 sheetSize, int frameCount_, float speed, Texture textureIndex) : Sprite(worldPos, animationSize, textureIndex)
+		SpriteAnimated(glm::vec2 worldPos, glm::vec2 animationSize, glm::vec2 sheetSize_, int frameCount_, float speed, Texture textureIndex) : Sprite(worldPos, animationSize, textureIndex)
 		{
-			frameCount = ((textureIndex == ghostSheet) ? 2 : 4);
+			frameCount = frameCount_;
 			currentFrame = 0;
-			frameDelay = 1 / ((textureIndex == ghostSheet) ? GHOST_ANIMATION_SPEED : PACMAN_ANIMATION_SPEED);
+			frameDelay = 1 / speed;
 			timeLeft = frameDelay;
 			direction = Direction(STARTING_DIRECTION);
-			reversed = 1;
 			index = textureIndex;
+			reversed = 1;
+			sheetSize = sheetSize_;
+			cellSize = 1 / sheetSize.y;
 		}
 
 		~SpriteAnimated()
@@ -105,13 +111,13 @@ class SpriteAnimated : public Sprite
 			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(Texture(index)));		//1 Since pacman.png is texture no 1.
 			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
-		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, 4, 4);
+		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, sheetSize.x, sheetSize.y);
 			//LOG_DEBUG("FrameCount: %d UV: %f, %f, %f, %f", currentFrame, UV.x, UV.y, UV.z, UV.w);
 			GLfloat vertices[] = {
-				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y + (0.25f * fixDir(direction)), 	// Left 	Top
-				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y + (0.25f * fixDir(direction)), 	// Right 	Top
-				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w + (0.25f * fixDir(direction)),	// Left 	Bottom
-				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w + (0.25f * fixDir(direction)) 	// Right 	Bottom
+				pos.x,			pos.y,			1.0f,	1.0f, 	1.0f,	UV.x, 	UV.y + (cellSize * fixDir(direction)), 	// Left 	Top
+				pos.x + size.x, pos.y,			1.0f,	1.0f, 	1.0f,	UV.z, 	UV.y + (cellSize * fixDir(direction)), 	// Right 	Top
+				pos.x, 			pos.y - size.y,	1.0f,	1.0f, 	1.0f,	UV.x, 	UV.w + (cellSize * fixDir(direction)),	// Left 	Bottom
+				pos.x + size.x, pos.y - size.y, 1.0f,	1.0f, 	1.0f,	UV.z, 	UV.w + (cellSize * fixDir(direction)) 	// Right 	Bottom
 			};//X 				Y 				R 		G 		B		U 		V
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
