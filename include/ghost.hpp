@@ -21,7 +21,7 @@ class Ghost : public MovableCharacter
 
 		//MovableCharacter(int Id, int x, int y)
 		//Call base-class constructor:
-		Ghost(int Id) : MovableCharacter(Id, ghostAnimation, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().y))
+		Ghost(int Id) : MovableCharacter(Id,glm::vec2(2, 4), 2, GHOST_ANIMATION_SPEED, ghostSheet, glm::vec2(GHOST_SPEED*level.retTSize().x, GHOST_SPEED*level.retTSize().y))
 		{
 
 		}

@@ -14,7 +14,7 @@ extern float dt;												//DeltaTime.
 class MovableCharacter
 {
 	private:
-		Animation type;												//Enum for character-type.
+		Texture type;												//Enum for character-type.
 		glm::vec2 speed;
 		SpriteAnimated spriteAnimated;
 		bool inTileCenter;
@@ -36,7 +36,7 @@ class MovableCharacter
 		MovableCharacter& operator =(const MovableCharacter& other) = default;
 
 
-		MovableCharacter(int Id, Animation typ, glm::vec2 s)
+		MovableCharacter(int Id, glm::vec2 sheetSize, int frameCount, float animationSpeed, Texture typ, glm::vec2 s)
 		{
 			inTileCenter = true;								//Starts in center of tile.
 			tileID = Id;
@@ -44,7 +44,7 @@ class MovableCharacter
 			speed = s;
 			pos = level.getTilePos(tileID);
 																//Creates new sprite of wanted type:
-			spriteAnimated = SpriteAnimated(pos, level.retTSize(), type);
+			spriteAnimated = SpriteAnimated(pos, level.retTSize(),sheetSize, frameCount, animationSpeed, type);
 			dir = STARTING_DIRECTION;
 			desiredDir = STARTING_DIRECTION;
 			tPos = level.getTilePos(tileID);					//Sets pos of current tile.

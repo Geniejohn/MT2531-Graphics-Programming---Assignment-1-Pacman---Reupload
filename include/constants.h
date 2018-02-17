@@ -22,11 +22,6 @@ enum Texture : int								//The different textrues a static sprite can have.
  	pellet, wall, empty, test, pacSheet, ghostSheet, upgrade,
 };
 
-enum Animation									//The different sprite sheet animations in the game.
-{
-	pacmanAnimation, ghostAnimation,
-};
-
 enum Character
 {
 	pacman, ghost,

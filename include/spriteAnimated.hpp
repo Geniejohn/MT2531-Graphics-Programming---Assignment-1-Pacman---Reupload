@@ -19,7 +19,7 @@ class SpriteAnimated : public Sprite
 		float timeLeft;
 		Direction direction;													//What direction is the character faceing.
 		int reversed;															//Is used to reverse the order of the animation, is 1 or -1.
-		Animation index;
+		Texture index;
 
 	public:
 
@@ -27,21 +27,15 @@ class SpriteAnimated : public Sprite
 
 		SpriteAnimated& operator =(const SpriteAnimated& other) = default;
 
-		SpriteAnimated(glm::vec2 worldPos, glm::vec2 animationSize, Animation animationIndex) : Sprite(worldPos, animationSize, Texture(animationIndex))
+		SpriteAnimated(glm::vec2 worldPos, glm::vec2 animationSize, glm::vec2 sheetSize, int frameCount_, float speed, Texture textureIndex) : Sprite(worldPos, animationSize, textureIndex)
 		{
-			LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
-							frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
-
-			frameCount = ((animationIndex == ghostAnimation) ? 2 : 4);
+			frameCount = ((textureIndex == ghostSheet) ? 2 : 4);
 			currentFrame = 0;
-			frameDelay = 1 / ((animationIndex == ghostAnimation) ? GHOST_ANIMATION_SPEED : PACMAN_ANIMATION_SPEED);
+			frameDelay = 1 / ((textureIndex == ghostSheet) ? GHOST_ANIMATION_SPEED : PACMAN_ANIMATION_SPEED);
 			timeLeft = frameDelay;
 			direction = Direction(STARTING_DIRECTION);
 			reversed = 1;
-			index = animationIndex;
-
-			LOG_DEBUG("	\n\n\nFramecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
-			 				frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
+			index = textureIndex;
 		}
 
 		~SpriteAnimated()
@@ -56,7 +50,6 @@ class SpriteAnimated : public Sprite
 		// }																		//2 becomes 3, 3 becomes 4, and 4 becomes 1.
 		// 																		//also converts to int.
         //
-
 
 		float fixDir(Direction dir)												//Rotates the direction. So 1 becomes 2
 		{																		//2 becomes 3, 3 becomes 4, and 4 becomes 1.
@@ -103,15 +96,13 @@ class SpriteAnimated : public Sprite
 					reversed *= -1;
 				}
 			}
-			LOG_DEBUG("	\n\n\ndt: %f, Framecount %d, currentFrame: %d, frameDelay: %f, timeLeft: %f, direction: %d, reversed: %d, index: %d",
-			dt, frameCount, currentFrame, frameDelay, timeLeft, direction, reversed, index);
 		}
 
 		void draw()
 		{
 			glBindVertexArray(vao);
 
-			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(pacSheet));		//1 Since pacman.png is texture no 1.
+			glBindTexture(GL_TEXTURE_2D, resourceManager.getTexture(Texture(index)));		//1 Since pacman.png is texture no 1.
 			glUniform1i(glGetUniformLocation(resourceManager.shaderProgram, "texOne"), 0);
 
 		 	glm::vec4 UV = Sprite::returnUVCoordsFromFrameNumber(currentFrame, 4, 4);
@@ -125,8 +116,6 @@ class SpriteAnimated : public Sprite
 
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-
-
 
 			GLuint elements[] = {
 				0, 1, 3,
