@@ -4,8 +4,11 @@
 #include "GLFW/glfw3.h"
 #include "movableCharacter.hpp"
 #include "resourceManager.hpp"
+// #include "gameloop.hpp"
 
 extern Pacman player;
+// extern GameLoop gameLoop;
+
 
 //Each space in the map except for the walls are tiles:
 class InputManager
@@ -54,27 +57,33 @@ class InputManager
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_W);
 			if(state == GLFW_PRESS)
 			{
-				LOG_DEBUG("UP!");
+				// LOG_DEBUG("UP!");
 				player.MovableCharacter::changeDesiredDir(up);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_A);
 			if(state == GLFW_PRESS)
 			{
-				LOG_DEBUG("LEFT!");
+				// LOG_DEBUG("LEFT!");
 				player.MovableCharacter::changeDesiredDir(left);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_S);
 			if(state == GLFW_PRESS)
 			{
-				LOG_DEBUG("DOWN!")
+				// LOG_DEBUG("DOWN!")
 				player.MovableCharacter::changeDesiredDir(down);
 			}
 			state = glfwGetKey(resourceManager.window, GLFW_KEY_D);
 			if(state == GLFW_PRESS)
 			{
-				LOG_DEBUG("RIGHT!");
+				// LOG_DEBUG("RIGHT!");
 				player.MovableCharacter::changeDesiredDir(right);
 			}
+			// state = glfwGetKey(resourceManager.window, GLFW_KEY_ESCAPE);		//If user exits:
+			// if(state == GLFW_PRESS)
+			// {
+			// 	LOG_DEBUG("The user pressed ESC, time to exit game.");
+			// 	//gameLoop.endLoop();														//End the gameloop.
+			// }
 		}
 
 };
