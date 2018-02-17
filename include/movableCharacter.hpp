@@ -108,8 +108,6 @@ class MovableCharacter
 		void updateDesiredDir(int desDir)
 		{
 			desiredDir = desDir;
-			LOG_DEBUG("Desired direction: %d", desiredDir);
-			LOG_DEBUG("Current direction: %d", dir);
 		}
 
 
@@ -233,10 +231,6 @@ class MovableCharacter
 			{
 				tileID = level.findNextTile(tileID, dir);		//Sets new current-tile.
 																//Updates position of destination-tile:
-				if(tileID == level.retStartTileID())
-				{
-					LOG_DEBUG("Entered spawn-tile, ID: %d. Direction: %d, next tileID: %d", tileID, dir, level.findNextTile(tileID, dir));
-				}
 				desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 			}
 
@@ -270,11 +264,9 @@ class MovableCharacter
 						warpCD = WARP_CD;						//Resets warp cooldown.
 						tileID = warps[(i+1)%warps.size()];
 						pos = level.getTilePos(tileID);			//Sets position to next warp in cycle.
-						LOG_DEBUG("Position after warp: %f, %f", pos.x, pos.y);
 
 						//Updates position of destination-tile:
 						int tempI = level.findNextTile(tileID, dir);
-						LOG_DEBUG("tileID: %d, direciton: %d, next tileID: %d", tileID, dir, tempI);
 						desTPos = level.getTilePos(level.findNextTile(tileID, dir));
 
 																//Next tile after warp is not traversable.

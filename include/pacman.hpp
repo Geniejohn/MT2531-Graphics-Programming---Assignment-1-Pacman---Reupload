@@ -54,8 +54,9 @@ class Pacman : public MovableCharacter
 		//Pacman lose 1 life and possibly triggers a gameover:
 		void die()
 		{
+			LOG_DEBUG("Died!");
 			lives--;
-			if(lives>0)											//Not game-over.
+			if(lives > 0)										//Not game-over.
 			{
 				respawn();
 			}
@@ -69,7 +70,11 @@ class Pacman : public MovableCharacter
 		//Sets Pacman to back to starting position:
 		void respawn()
 		{
+			LOG_DEBUG("Respawning!");
 			MovableCharacter::tileID = startingTileID;
+			MovableCharacter::desTPos = level.getTilePos(level.findNextTile(startingTileID, STARTING_DIRECTION));
+			MovableCharacter::desiredDir = still;
+			MovableCharacter::dir = still;
 			MovableCharacter::pos = level.getTilePos(startingTileID);
 		}
 };
