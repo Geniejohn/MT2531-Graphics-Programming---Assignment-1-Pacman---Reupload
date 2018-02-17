@@ -62,7 +62,8 @@ class Level
 
 				for (int i = 0; i < numberOfTiles; i++) 		//Reads level-file and creates tiles.
 				{
-					reader >> tempID;
+					reader >> tempID;							//Reads character from level-file.
+
 																//'1-HORIZONTAL_GAMESPACE = Padding.
 																//'i%mapWidth' gives number for that row.
 																//Formula: Borderpos + padding + increment.
@@ -70,6 +71,7 @@ class Level
 					xPos = (-1.0f+(1-HORIZONTAL_GAMESPACE)+((i%mapWidth)*tSize.x));
 					yPos = ((1.0f-(1-VERTICAL_GAMESPACE))-((i/mapWidth)*tSize.y));
 
+					//Compares char from level-file to const-values set in 'constants.h'.
 					switch (tempID)
 					{
 						case LEVEL_WALL:
