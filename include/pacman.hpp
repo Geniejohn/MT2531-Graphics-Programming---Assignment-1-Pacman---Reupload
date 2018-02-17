@@ -5,6 +5,7 @@
 #include "constants.h"
 
 extern Level level;
+extern float dt;
 // extern GAMEUI gameUI;
 
 class Pacman : public MovableCharacter
@@ -12,6 +13,7 @@ class Pacman : public MovableCharacter
 	private:
 		int lives;
 		int startingTileID;										//ID of tile Pacman spawns at.
+		float invincibilityCD;									//Tracks how long to remain invincible.
 
 	public:
 
@@ -47,6 +49,7 @@ class Pacman : public MovableCharacter
 
 		void update()
 		{
+			invincibilityCD -= dt;								//Counts down invincibility cooldown.
 			MovableCharacter::update();
 		}
 
@@ -54,15 +57,19 @@ class Pacman : public MovableCharacter
 		//Pacman lose 1 life and possibly triggers a gameover:
 		void die()
 		{
-			LOG_DEBUG("Died!");
-			lives--;
-			if(lives > 0)										//Not game-over.
+			if(invincibilityCD < 0.0f)							//Pacman can die.
 			{
-				respawn();
-			}
-			else												//Game-over.
-			{
-			//	gameUI.gameOver();
+				lives--;
+				if(lives > 0)									//Not game-over.
+				{
+					respawn();
+				}
+				else											//Game-over.
+				{
+					LOG_DEBUG("Game over.");
+					//	gameUI.gameOver();
+				}
+				invincibilityCD = INVINCIBILITY_CD;				//Resets invincibility cooldown.
 			}
 		}
 
