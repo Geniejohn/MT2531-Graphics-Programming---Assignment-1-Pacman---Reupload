@@ -11,6 +11,10 @@ Scalable stuff:	Map can have any number of tiles in both dimensions.
 				//DESCRIPTION OF SCALABILITY OF SPRITE AND SPRITEANIMATED.
 				//DESCRIPTION OF RESOURCEMANAGER-SOLUTION.
 
+
+The map loader compares the characters in level-file to const-values in constants.h and creates the
+map accordingly. This makes it very flexible and scalable.
+
 main.cpp is clean.
 
 We handle input in such a way that the player can press up while moving horizontally, causing Pacman
@@ -25,4 +29,4 @@ junction or end of a corridor.
 We made a lot of different classes and some sub-classes which each do their own different thing.
 
 We had extensive use of commits and detailed messages.
-We used the issueboard on GitLab with proper labels.
+We used the issue-board on GitLab with proper labels.
