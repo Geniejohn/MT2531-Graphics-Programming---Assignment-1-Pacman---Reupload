@@ -1,19 +1,4 @@
 #pragma once
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
-#include <fstream>
-#include <time.h>
-#include <cstdlib>
-
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm/glm.hpp"
-#include "glm/glm/gtc/matrix_transform.hpp"
-#include "glm/glm/gtc/type_ptr.hpp"
-
 #include "resourceManager.hpp"
 #include "constants.h"
 

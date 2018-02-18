@@ -1,6 +1,4 @@
 #pragma once
-#include "movableCharacter.hpp"
-#include "constants.h"
 #include <cstdlib>												//rand()
 #include "glm/glm/glm.hpp"
 #include "cmath"												// abs()

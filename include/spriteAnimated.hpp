@@ -1,10 +1,4 @@
 #pragma once
-#include "GL/glew.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm/glm.hpp"
-
-#include "resourceManager.hpp"
-#include "constants.h"
 #include "sprite.hpp"
 
 extern float dt;

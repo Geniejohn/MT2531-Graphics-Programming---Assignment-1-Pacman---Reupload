@@ -2,12 +2,7 @@
 #include "glm/glm/glm.hpp"
 #include "logger.h"
 #include "gameloop.hpp"
-#include "constants.h"
-#include "inputManager.hpp"
 #include "resourceManager.hpp"
-#include "level.hpp"
-#include "pacman.hpp"
-#include "ghost.hpp"
 #include <vector>
 
 ResourceManager resourceManager;		//Loads and constains all texturs as well as handeling most of the OpenGL calls.

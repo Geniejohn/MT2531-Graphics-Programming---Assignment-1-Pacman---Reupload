@@ -2,7 +2,6 @@
 #include "glm/glm/glm.hpp"
 
 #include "movableCharacter.hpp"
-#include "constants.h"
 
 extern Level level;
 extern float dt;

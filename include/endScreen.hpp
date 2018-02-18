@@ -1,9 +1,5 @@
 #pragma once
-
-#include "logger.h"
-#include "glm/glm/glm.hpp"
 #include "sprite.hpp"
-#include "constants.h"
 #include "counter.hpp"
 
 class EndScreen
@@ -18,7 +14,7 @@ class EndScreen
 
 
 		//Takes ints and returns position.
-		//E.G. fracX = 
+		//E.G. fracX =
 		glm::vec2 retWPos(int fracX, int fracY)
 		{
 

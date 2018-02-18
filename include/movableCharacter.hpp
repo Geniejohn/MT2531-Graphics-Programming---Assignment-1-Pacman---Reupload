@@ -4,9 +4,9 @@
 #include "logger.h"
 #include "spriteAnimated.hpp"
 #include "level.hpp"
-#include "pacman.hpp"
 #include <vector>
 #include "gameUI.hpp"
+#include "constants.h"
 
 extern Level level;
 extern GameUI gameUI;

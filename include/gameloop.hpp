@@ -86,6 +86,7 @@ class GameLoop
         void endLoop()
 		{
 		    running = false;
+			 LOG_DEBUG("ENDLOOP!");
 		}
 
 };

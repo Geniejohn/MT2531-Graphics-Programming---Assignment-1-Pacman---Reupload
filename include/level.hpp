@@ -8,6 +8,10 @@
 #include "glm/glm/glm.hpp"
 #include "tile.hpp"
 #include <vector>
+// #include "gameloop.hpp"	Circle include
+
+
+// extern GameLoop gameLoop;
 
 
 //Manages the map:
@@ -290,6 +294,7 @@ class Level
 
 		void draw()
 		{
+			//gameLoop.endLoop(); 	//testing circle include probelm
 			for (int i = 0; i < numberOfTiles; i++)
 			{
 				tiles[i].draw();

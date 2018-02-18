@@ -2,7 +2,6 @@
 #include "pacman.hpp"
 #include "constants.h"
 #include "GLFW/glfw3.h"
-#include "movableCharacter.hpp"
 #include "resourceManager.hpp"
 // #include "gameloop.hpp"
 
